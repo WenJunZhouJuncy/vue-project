@@ -30,6 +30,7 @@ module.exports = {
   productionSourceMap: false,
   // css相关配置
   css: {
+    requireModuleExtension: true,
     // 是否使用css分离插件 ExtractTextPlugin
     extract: IS_PROD,
     // 开启 CSS source maps?
@@ -41,7 +42,7 @@ module.exports = {
       },
     },
     // 启用 CSS modules for all css / pre-processor files.
-    modules: false
+    // modules: false
   },
   // use thread-loader for babel & TS in production build
   // enabled by default if the machine has more than 1 cores

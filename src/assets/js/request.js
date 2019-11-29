@@ -21,8 +21,12 @@ api.interceptors.request.use(function (config) {
 api.interceptors.response.use(function (response) {
     // 对响应数据做点什么  response请求成功返回的数据
     let data = response;
-    Message.error(data.message);
-    console.log(data)
+    // Message({
+    //     showClose: true,
+    //     message: data.message,
+    //     type: 'error',
+    //     duration: 1000
+    // })
     if (data.resCode !== 0){
         Message.error(data.message);
         return Promise.reject(data);
@@ -30,7 +34,6 @@ api.interceptors.response.use(function (response) {
         return response;
     }
 }, function (error) {
-    console.log('2131311211312')
     // 对响应错误做点什么
     return Promise.reject(error);
 });

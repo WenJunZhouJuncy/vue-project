@@ -2,7 +2,7 @@ import api from "@/assets/js/request.js";
 
 export function getSms(data){
     return api.request({
-        method: 'get',
+        method: 'post',
         url: '/getSms/',
         data
     })

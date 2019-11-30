@@ -1,15 +1,33 @@
 import api from "@/assets/js/request.js";
 
+/*
+* 获取验证码
+*/
 export function getSms(data){
     return api.request({
-        method: 'get',
+        method: 'post',
         url: '/getSms/',
         data
     })
-    // .then(function (response) {
-    //     console.log(response);
-    // })
-    // .catch(function (error) {
-    //     console.log(error);
-    // });
+}
+/*
+* 登录
+*/
+export function getLogin(data) {
+    return api.request({
+        method:'post',
+        url:'/login/',
+        data
+    })
+}
+
+/*
+* 注册
+*/
+export function getRegister(data) {
+    return api.request({
+        method:'post',
+        url:'/register/',
+        data
+    })
 }

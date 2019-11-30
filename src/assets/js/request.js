@@ -5,7 +5,7 @@ const BASEURL = process.env.NODE_ENV === 'production' ? '' : '/devApi';
 
 const api = axios.create({//创建拦截器
     baseURL:BASEURL,         //   地址/devApi   == "http://www.web-jshtml.cn/productapi"
-    timeout:1000,
+    timeout:15000,      //15秒超时
 });
 
 // 添加请求拦截器
@@ -20,13 +20,7 @@ api.interceptors.request.use(function (config) {
 // 添加响应拦截器
 api.interceptors.response.use(function (response) {
     // 对响应数据做点什么  response请求成功返回的数据
-    let data = response;
-    // Message({
-    //     showClose: true,
-    //     message: data.message,
-    //     type: 'error',
-    //     duration: 1000
-    // })
+    let data = response.data;
     if (data.resCode !== 0){
         Message.error(data.message);
         return Promise.reject(data);

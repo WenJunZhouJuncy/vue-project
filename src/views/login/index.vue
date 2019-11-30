@@ -37,8 +37,8 @@
                                       @keyup.enter.native="submitForm('loginForm')"
                                       style="margin-right: 12px;width: 220px"
                             ></el-input>
-                            <el-button v-if="submitDowncount" class="el-button-class" @click="postCode">发送验证码</el-button>
-                            <el-button v-else class="el-button-class">{{times}}s</el-button>
+                            <el-button v-if="submitDowncount" class="el-button-class" @click="postCode('login')">发送验证码</el-button>
+                            <el-button v-else class="el-button-class" disabled>{{times === 0?'发送中':times + 's'}}</el-button>
                         </el-form-item>
                         <el-form-item>
                             <el-button class="el-submit-class" @click="submitForm('loginForm')">登录</el-button>
@@ -85,8 +85,8 @@
                                       @keyup.enter.native="regForm('registerForm')"
                                       style="margin-right: 12px;width: 220px"
                             ></el-input>
-                            <el-button v-if="registerDowncount" class="el-button-class" @click="postCode">发送验证码</el-button>
-                            <el-button v-else class="el-button-class">{{times}}s</el-button>
+                            <el-button v-if="registerDowncount" class="el-button-class" @click="postCode('register')">发送验证码</el-button>
+                            <el-button v-else class="el-button-class" disabled>{{times === 0?'发送中':times + 's'}}</el-button>
                         </el-form-item>
                         <el-form-item>
                             <el-button class="el-submit-class" @click="regForm('registerForm')">注册</el-button>
@@ -99,7 +99,7 @@
 </template>
 
 <script>
-    import { getSms } from "@/api/login/login.js";
+    import { getSms,getLogin,getRegister } from "@/api/login/login.js";
     import imgUrl from "@/assets/img/loginstar.png";
     export default {
         name: "index",
@@ -156,8 +156,27 @@
         },
         methods:{
             //注册账号
-            regForm(){
-
+            regForm(formName){
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        let params = {
+                            username: this.registerForm.message,
+                            password: this.registerForm.password1,
+                            code: this.registerForm.code,
+                            module: 'register'
+                        }
+                        getRegister(params)
+                            .then((response) =>{
+                                this.activeName = 'login'
+                                this.tabClick()
+                            }).catch((error)=>{
+                                console.log(error)
+                        })
+                    } else {
+                        this.$message.error('请填写完整信息！');
+                        return false
+                    }
+                });
             },
             // 登录
             submitForm(formName){
@@ -171,36 +190,39 @@
                 });
             },
             // 发送验证码
-            postCode(){
-                // let reg = /[1-9]\d{7,10}@qq\.com/;
-                // if (this.loginForm.message === ''){
-                //     this.$message.error('邮箱不能为空！')
-                //     return false;
-                // }else if ( !reg.test(this.loginForm.message) ){
-                //     this.$message.error('邮箱格式错误！')
-                //     return false;
-                // }
-                // //倒计时
-                // this.getDownCount(this.activeName)
-
+            postCode(type){
+                let that = type === 'login'? this.loginForm.message : this.registerForm.message;
+                let reg = /[1-9]\d{7,10}@qq\.com/;
+                if (that === ''){
+                    this.$message.error('邮箱不能为空！');
+                    return false;
+                }else if ( !reg.test(that) ){
+                    this.$message.error('邮箱格式错误！');
+                    return false;
+                }
+                type === 'login'? this.submitDowncount = false : this.registerDowncount = false;
                 // 发起请求
-                console.log(this.loginForm.message,this.activeName)
                 let params  = {
                     username : this.activeName === 'login'?this.loginForm.message : this.registerForm.message,
                     module : this.activeName,
                 }
-                getSms(params)
-                .then((response)=>{
-                    // console.log(response)
+                getSms(params).then((response)=>{
+                    // console.log(response);
+                    let data = response.data
+                    this.$message({
+                        message: data.message,
+                        type: 'success'
+                    });
+                    this.getDownCount(this.activeName);     //倒计时
                 }).catch((error)=>{
-                    // console.log(error)
+                    console.log(error)
                 })
             },
             //登录注册切换
-            tabClick(tab){
+            tabClick(){
                 // console.log(tab);
                 // 重置
-                clearInterval(this.timer);
+                this.timer?clearInterval(this.timer):null;
                 this.$refs['loginForm'].resetFields();      //清空输入框
                 this.$refs['registerForm'].resetFields();
                 this.submitDowncount = true;      //登录验证码按钮状态
@@ -208,35 +230,17 @@
                 this.times = 0;                    //倒计时时间
             },
             //倒计时
-            getDownCount(name){
-                switch (name) {
-                    case 'login':
-                        this.submitDowncount = false;
+            getDownCount(type){
+                this.timer?clearInterval(this.timer):null;
+                this.times = 60;
+                this.timer = setInterval(() => {
+                    this.times -= 1;
+                    if (this.times === 0) {
                         clearInterval(this.timer);
-                        this.times = 60;
-                        this.timer = setInterval(() => {
-                            this.times--;
-                            if (this.times === 0) {
-                                clearInterval(this.timer);
-                                this.timer = null;
-                                this.submitDowncount = true;
-                            }
-                        }, 1000);
-                        break;
-                    case 'register':
-                        this.registerDowncount = false;
-                        clearInterval(this.timer);
-                        this.times = 60;
-                        this.timer = setInterval(() => {
-                            this.times--;
-                            if (this.times === 0) {
-                                clearInterval(this.timer);
-                                this.timer = null;
-                                this.registerDowncount = true;
-                            }
-                        }, 1000);
-                        break;
-                }
+                        this.timer = null;
+                        type === 'login'? this.submitDowncount = true : this.registerDowncount = true;
+                    }
+                }, 1000);
             }
         }
     }

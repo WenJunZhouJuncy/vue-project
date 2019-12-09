@@ -180,14 +180,15 @@
             },
             // 登录
             submitForm(formName){
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        console.log(valid);
-                    } else {
-                        console.log('error submit!!');
-                        return false
-                    }
-                });
+              this.$router.push({path:'/home'})
+                // this.$refs[formName].validate((valid) => {
+                //     if (valid) {
+                //         console.log(valid);
+                //     } else {
+                //         console.log('error submit!!');
+                //         return false
+                //     }
+                // });
             },
             // 发送验证码
             postCode(type){

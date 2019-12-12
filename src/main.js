@@ -8,6 +8,10 @@ import axios from 'axios';
 import '@/assets/css/overall.css'
 Vue.prototype.axios = axios
 
+// Vue.component('abc',{
+//   template:'<div>123132</div>'
+// })
+
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 new Vue({

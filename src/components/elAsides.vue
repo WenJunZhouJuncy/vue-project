@@ -12,13 +12,13 @@
       <el-scrollbar style="height:100%">
         <template v-for="(item,index) in routes">
           <el-menu-item :index="item.path" :key="item.id" v-if="!item.children">
-            <i class="el-icon-menu"></i>
+            <i :class="item.icon"></i>
             <span slot="title">{{item.meta.name}}</span>
           </el-menu-item>
 
           <el-submenu :index="index.toString()" :key="item.id" v-else>
             <template slot="title">
-              <i class="el-icon-location"></i>
+              <i :class="item.icon"></i>
               <span>{{item.meta.name}}</span>
             </template>
             <template v-for="t in item.children">

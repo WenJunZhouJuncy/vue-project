@@ -34,14 +34,14 @@ import elHeaders from '@/components/elHeaders';
     width: 250px !important;
   }
   .el-header{
-    background-color: #B3C0D1;
     color: #333;
-    height: 78px;
+    height: 70px !important;
+    padding: 0;
   }
   .el-main {
     background-color: #E9EEF3;
-    // color: #333;
-    text-align: center;
+    color: #333;
+    padding: 0;
   }
 }
 

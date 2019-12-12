@@ -6,6 +6,7 @@ const routes = [
   {
     path: '/home',
     name: 'home',
+    redirect:'/home/console',
     meta:{
       name:'主页',
     },
@@ -14,6 +15,7 @@ const routes = [
       {
         path: '/home/console',
         name: 'console',
+        icon: 'el-icon-s-tools',
         meta:{
           name:'控制台',
         },
@@ -22,6 +24,7 @@ const routes = [
       {
         path: '/home/messageManage',
         name: 'messageManage',
+        icon: 'el-icon-info',
         meta:{
           name:'信息管理',
         },
@@ -48,6 +51,7 @@ const routes = [
       {
         path: '/home/users',
         name: 'users',
+        icon: 'el-icon-user-solid',
         meta:{
           name:'用户管理',
         },
@@ -75,10 +79,6 @@ const routes = [
   },
   {
     path: '/',
-    redirect:'/login',
-  },
-  {
-    path: '/home',
     redirect:'/home/console',
   },
   {

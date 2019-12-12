@@ -1,5 +1,5 @@
 <template>
-  <div class="messageManage">
+  <div class="messageManage card pd30">
     <router-view></router-view>
   </div>
 </template>

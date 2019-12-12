@@ -1,5 +1,5 @@
 <template>
-  <div class="user">
+  <div class="user card pd30">
     <router-view></router-view>
   </div>
 </template>

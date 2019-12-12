@@ -1,5 +1,5 @@
 <template>
-  <div class="console">
+  <div class="console card pd30">
     控制台
     <el-button @click="setsess">存储</el-button>
     <el-button @click="getsess">获取</el-button>
@@ -17,17 +17,13 @@ export default {
   },
   methods: {
     setsess(){
-      window.localStorage.setItem('key','value')
+      this.Cookies.set('name','aaa')
     },
     getsess(){
-      console.log(window.sessionStorage);
-      this.$message({
-        type:'success',
-        message:localStorage.getItem('key')
-      })
+
     },
     remove(){
-      localStorage.removeItem('key')
+
     }
   }
 }

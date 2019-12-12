@@ -5,10 +5,10 @@
               <elAsides></elAsides>
             </el-aside>
             <el-container>
-                <el-header>
+                <el-header class="pdlr30">
                   <elHeaders></elHeaders>
                 </el-header>
-                <el-main>
+                <el-main class="pd30">
                   <router-view></router-view>
                 </el-main>
             </el-container>
@@ -34,14 +34,8 @@ import elHeaders from '@/components/elHeaders';
     width: 250px !important;
   }
   .el-header{
-    color: #333;
     height: 70px !important;
-    padding: 0;
-  }
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-    padding: 0;
+    border-bottom: 1px #DCDFE6 solid;
   }
 }
 

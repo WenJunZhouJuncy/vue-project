@@ -5,7 +5,7 @@
       class="el-menu-vertical-demo"
       @open="handleOpen"
       @close="handleClose"
-      background-color="#545c64"
+      background-color="#456789"
       text-color="#fff"
       active-text-color="#ffd04b"
       router>
@@ -65,7 +65,7 @@ export default {
       overflow-x: hidden;
     }
     .is-active,.is-opened .is-active{
-      background-color: #558ff2 !important;
+      background-color: #409EFF !important;
     }
     .el-submenu .el-menu-item {
       padding-left: 50px !important;

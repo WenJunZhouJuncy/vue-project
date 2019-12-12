@@ -236,7 +236,7 @@
                     });
                     this.getDownCount(this.activeName);     //请求成功倒计时
                 }).catch((error)=>{
-                    type === 'login'? this.submitDowncount = false : this.registerDowncount = false; //切换验证码按钮状态
+                    type === 'login'? this.submitDowncount = true : this.registerDowncount = true; //切换验证码按钮状态
                     console.log(error.message)
                     this.$message.error(error.message)
                     this.resetCodeBtn();

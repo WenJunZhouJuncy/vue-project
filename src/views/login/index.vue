@@ -161,7 +161,6 @@
             regForm(formName){
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        debugger
                         let params = {
                             username: this.registerForm.message,
                             password: sha1(this.registerForm.password1),
@@ -194,16 +193,14 @@
                             password: this.loginForm.password,
                             code: this.loginForm.code
                         }
-                        getLogin(params).then((data) =>{
-                            console.log(data.message)
+                        this.$store.dispatch('ACTIONS_LOGIN',params).then(data =>{
                             this.$message({
                                 message: data.message,
                                 type: 'success'
                             });
-                            console.log(data)
-                        }).catch((error)=>{
+                            this.$router.push({path:'/home/console'})
+                        }).catch(error =>{
                             this.$message.error(error.message)
-                            console.log(error)
                         })
                     } else {
                         this.$message.error('请填写完整信息!')

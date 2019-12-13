@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
+import console from './module/console'
+import messageManage from './module/messageManage'
+import users from "./module/users";
+import login from "./module/login";
 Vue.use(VueRouter);
 const routes = [
   {
@@ -12,83 +15,16 @@ const routes = [
     },
     component: () => import('@/views/home/index.vue'),
     children:[
-      {
-        path: '/home/console',
-        name: 'console',
-        icon: 'el-icon-s-tools',
-        meta:{
-          name:'控制台',
-        },
-        component: () => import('@/views/console/index.vue'),
-      },
-      {
-        path: '/home/messageManage',
-        name: 'messageManage',
-        icon: 'el-icon-info',
-        meta:{
-          name:'信息管理',
-        },
-        component: () => import('@/views/messageManage/index.vue'),
-        children:[
-          {
-            path:'/home/messageManage/messageList',
-            name:'messageList',
-            meta:{
-              name:'信息列表',
-            },
-            component:() => import('@/views/messageManage/messageList/index')
-          },
-          {
-            path:'/home/messageManage/messageClassify',
-            name:'messageClassify',
-            meta:{
-              name:'信息分类',
-            },
-            component:() => import('@/views/messageManage/messageClassify/index')
-          },
-        ]
-      },
-      {
-        path: '/home/users',
-        name: 'users',
-        icon: 'el-icon-user-solid',
-        meta:{
-          name:'用户管理',
-        },
-        component: () => import('@/views/users/index.vue'),
-        children:[
-          {
-            path:'/home/users/userList',
-            name:'userList',
-            meta:{
-              name:'用户列表',
-            },
-            component:() => import('@/views/users/userList/index')
-          },
-          {
-            path:'/home/users/userMessage',
-            name:'userMessage',
-            meta:{
-              name:'用户信息',
-            },
-            component:() => import('@/views/users/userMessage/index')
-          },
-        ]
-      },
+      console,
+      messageManage,
+      users
     ]
   },
+  login,
   {
-    path: '/',
-    redirect:'/home/console',
-  },
-  {
-    path: '/login',
-    name: 'login',
-    meta:{
-      name:'登录',
-    },
-    component: () => import('@/views/login/index.vue')
-  },
+    path:'/',
+    redirect:'/login'
+  }
 ];
 
 const router = new VueRouter({

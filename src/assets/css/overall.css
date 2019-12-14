@@ -1,0 +1,29 @@
+.pd30{
+  padding: 30px;
+}
+.pdl30{
+  padding-left: 30px;
+}
+.pdl20{
+  padding-left: 20px;
+}
+.pdr30{
+  padding-right: 30px;
+}
+.pdr20{
+  padding-right: 20px;
+}
+.mgr10{
+  margin-right: 10px;
+}
+.mgr30{
+  margin-right: 30px;
+}
+.mgb30{
+  margin-bottom: 30px;
+}
+.card{
+  border: 1px #E4E7ED solid;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
+}

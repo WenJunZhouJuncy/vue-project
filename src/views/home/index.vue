@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div class="home">
     <el-container>
       <el-aside>
@@ -42,12 +43,41 @@
       return{
         loading: true
       }
+=======
+    <div class="home">
+        <el-container>
+            <el-aside>
+              <elAsides></elAsides>
+            </el-aside>
+            <el-container>
+                <el-header class="pdlr30">
+                  <elHeaders></elHeaders>
+                </el-header>
+                <el-main class="pd30">
+                  <router-view></router-view>
+                </el-main>
+            </el-container>
+        </el-container>
+    </div>
+</template>
+
+<script>
+import elAsides from '@/components/elAsides';
+import elHeaders from '@/components/elHeaders';
+    export default {
+        name: "index",
+        components:{
+            elAsides,
+            elHeaders
+        }
+>>>>>>> feature-vueProject-V1.0.0-20191126
     }
   }
 </script>
 
 <style lang="scss">
 .home{
+<<<<<<< HEAD
   .elHeader{
     height: 80px;
     background-color: #B3C0D1;
@@ -62,4 +92,19 @@
   }
 }
   
+=======
+  .el-aside{
+    width: 250px !important;
+  }
+  .el-header{
+    min-width: 580px;
+    height: 70px !important;
+    border-bottom: 1px #DCDFE6 solid;
+  }
+  .el-main{
+    min-width: 810px;
+  }
+}
+
+>>>>>>> feature-vueProject-V1.0.0-20191126
 </style>

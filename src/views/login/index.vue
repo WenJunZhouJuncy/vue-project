@@ -99,6 +99,8 @@
 </template>
 
 <script>
+    // 加密 base64 、{md5 、 sha1 特点:不可逆，加密后不可解密}
+    import sha1 from 'sha1';
     import { getSms,getLogin,getRegister } from "@/api/login/login.js";
     import imgUrl from "@/assets/img/loginstar.png";
     export default {
@@ -155,31 +157,36 @@
             }
         },
         methods:{
-            //注册账号
+            //注册账号注册账号注册账号注册账号注册账号注册账号注册账号注册账号注册账号注册账号注册账号注册账号注册账号注册账号注册账号注册账号
             regForm(formName){
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         let params = {
                             username: this.registerForm.message,
-                            password: this.registerForm.password1,
-                            code: this.registerForm.code,
-                            module: 'register'
+                            password: sha1(this.registerForm.password1),
+                            code: this.registerForm.code
                         }
                         getRegister(params)
-                            .then((response) =>{
+                            .then((data) =>{
+                                this.$message({
+                                    type:"success",
+                                    message:data.message
+                                });
                                 this.activeName = 'login'
                                 this.tabClick()
                             }).catch((error)=>{
                                 console.log(error)
+                                this.$message.error(error.message)
                         })
                     } else {
-                        this.$message.error('请填写完整信息！');
+                        this.$message.error('请填写完整信息!');
                         return false
                     }
                 });
             },
-            // 登录
+            // 登录账号登录账号登录账号登录账号登录账号登录账号登录账号登录账号登录账号登录账号登录账号登录账号登录账号登录账号登录账号登录账号
             submitForm(formName){
+<<<<<<< HEAD
               this.$router.push({path:'/home'})
                 // this.$refs[formName].validate((valid) => {
                 //     if (valid) {
@@ -189,48 +196,77 @@
                 //         return false
                 //     }
                 // });
+=======
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        let params = {
+                            username: this.loginForm.message,
+                            password: this.loginForm.password,
+                            code: this.loginForm.code
+                        }
+                        this.$store.dispatch('ACTIONS_LOGIN',params).then(data =>{
+                            this.$message({
+                                message: data.message,
+                                type: 'success'
+                            });
+                            this.$router.push({path:'/home/console'})
+                        }).catch(error =>{
+                            this.$message.error(error.message)
+                        })
+                    } else {
+                        this.$message.error('请填写完整信息!')
+                        return false
+                    }
+                });
+>>>>>>> feature-vueProject-V1.0.0-20191126
             },
-            // 发送验证码
+            // 发送验证码发送验证码发送验证码发送验证码发送验证码发送验证码发送验证码发送验证码发送验证码发送验证码发送验证码发送验证码发送验证码
             postCode(type){
-                let that = type === 'login'? this.loginForm.message : this.registerForm.message;
+                let mail = type === 'login'? this.loginForm.message : this.registerForm.message;
                 let reg = /[1-9]\d{7,10}@qq\.com/;
-                if (that === ''){
+                if (mail === ''){
                     this.$message.error('邮箱不能为空！');
                     return false;
-                }else if ( !reg.test(that) ){
+                }else if ( !reg.test(mail) ){
                     this.$message.error('邮箱格式错误！');
                     return false;
                 }
-                type === 'login'? this.submitDowncount = false : this.registerDowncount = false;
+                type === 'login'? this.submitDowncount = false : this.registerDowncount = false; //切换验证码按钮状态
                 // 发起请求
                 let params  = {
-                    username : this.activeName === 'login'?this.loginForm.message : this.registerForm.message,
+                    username : mail,
                     module : this.activeName,
                 }
-                getSms(params).then((response)=>{
+                getSms(params).then((data)=>{
                     // console.log(response);
-                    let data = response.data
                     this.$message({
                         message: data.message,
                         type: 'success'
                     });
-                    this.getDownCount(this.activeName);     //倒计时
+                    this.getDownCount(this.activeName);     //请求成功倒计时
                 }).catch((error)=>{
-                    console.log(error)
+                    type === 'login'? this.submitDowncount = true : this.registerDowncount = true; //切换验证码按钮状态
+                    console.log(error.message)
+                    this.$message.error(error.message)
+                    this.resetCodeBtn();
                 })
             },
-            //登录注册切换
+            //tag栏切换tag栏切换tag栏切换tag栏切换tag栏切换tag栏切换tag栏切换tag栏切换tag栏切换tag栏切换tag栏切换tag栏切换tag栏切换tag栏切换
             tabClick(){
                 // console.log(tab);
                 // 重置
                 this.timer?clearInterval(this.timer):null;
                 this.$refs['loginForm'].resetFields();      //清空输入框
                 this.$refs['registerForm'].resetFields();
+                this.times = 0;                    //倒计时时间重置
+                this.resetCodeBtn();                //验证码按钮状态
+            },
+
+            resetCodeBtn(){
                 this.submitDowncount = true;      //登录验证码按钮状态
                 this.registerDowncount = true;     //注册验证码按钮状态
-                this.times = 0;                    //倒计时时间
             },
-            //倒计时
+            //倒计时倒计时倒计时倒计时倒计时倒计时倒计时倒计时倒计时倒计时倒计时倒计时倒计时倒计时倒计时倒计时倒计时倒计时倒计时倒计时倒计时倒计时
             getDownCount(type){
                 this.timer?clearInterval(this.timer):null;
                 this.times = 60;

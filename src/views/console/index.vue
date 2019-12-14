@@ -1,8 +1,6 @@
 <template>
   <div class="console card pd30">
-    控制台
-    {{this.$store.state}}
-    <el-button @click="set">存储</el-button>
+    暂无数据
   </div>
 </template>
 

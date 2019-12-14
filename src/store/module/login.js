@@ -21,7 +21,7 @@ const login = {
         ACTIONS_LOGIN(content,data){
             return new Promise((resolve,reject) =>{
                 getLogin(data).then(response =>{
-                    let data = response.data.data;
+                    let data = response.data;
                     console.log(response);
                     content.commit('SET_TOKEN',data.token);
                     content.commit('SET_USERNAME',data.username);

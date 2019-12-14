@@ -1,17 +1,15 @@
 <template>
   <div class="el_headers">
-    <i class="el-icon-s-operation" />
     <div class="head_left_box">
-      <el-dropdown>
-        <span class="el-dropdown-link pdr20">
-          <img />
-        </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>黄金糕</el-dropdown-item>
-          <el-dropdown-item>狮子头</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-      <el-tooltip class="item" effect="dark" content="退出登录" placement="bottom">
+      <i class="el-icon-time mgr10" />
+      <span>{{time}}</span>
+    </div>
+    <div class="head_right_box">
+      <span class="mgr10">{{this.$store.state.login.username}}</span>
+      <div class="img_box mgr10">
+
+      </div>
+      <el-tooltip effect="dark" content="退出登录" placement="bottom">
         <i class="el-icon-switch-button" />
       </el-tooltip>
     </div>
@@ -21,13 +19,22 @@
 <script>
 export default {
   name: "el_headers",
+  created(){
+    this.getTime()
+  },
   data() {
     return {
-
+      time:''
     }
   },
   methods: {
-
+    getTime(){
+      let date = new Date()
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let day = date.getDate();
+      this.time = year + '-' + month + '-' + day;
+    }
   }
 }
 </script>
@@ -38,24 +45,42 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  .el-icon-s-operation{
-    font-size: 30px;
-    color: #999;
-  }
   .head_left_box{
+    .el-icon-time{
+      font-size: 30px;
+      color: #999;
+      vertical-align: middle;
+    }
+    span{
+      font-size: 18px;
+      color: #333;
+      vertical-align: middle;
+    }
+  }
+  .head_right_box{
     display: flex;
     align-items: center;
-    img{
+    span{
+      font-size: 16px;
+      color: #999;
+    }
+    .img_box{
       width: 45px;
       height: 45px;
       background-color: #eee;
       border-radius: 50%;
       cursor: pointer;
+      img{
+        width: 100%;
+        height: 100%;
+      }
     }
     .el-icon-switch-button{
-      font-size: 40px;
+      padding: 0 5px;
+      font-size: 36px;
       color: #ff0000;
       cursor: pointer;
+      border-left: 1px #eee solid;
     }
   }
 }

@@ -34,8 +34,12 @@ import elHeaders from '@/components/elHeaders';
     width: 250px !important;
   }
   .el-header{
+    min-width: 580px;
     height: 70px !important;
     border-bottom: 1px #DCDFE6 solid;
+  }
+  .el-main{
+    min-width: 810px;
   }
 }
 

@@ -1,5 +1,6 @@
 <template>
   <div class="messageList">
+    <myDialog ref="dialog"></myDialog>
     <div class="top_box mgb30">
       <div class="type_box mgr30">
         <span class="mgr10">类型:</span>
@@ -43,7 +44,7 @@
       </div>
     </div>
     <div class="table_box mgb30">
-      <mytable></mytable>
+      <mytable @tableRedact="tableRedact"></mytable>
     </div>
     <div class="foote_box">
       <el-button>批量删除</el-button>
@@ -55,19 +56,21 @@
 <script>
 import mytable from '@/components/messageTable';
 import mypage from '@/components/myPage';
+import myDialog from "@/components/myDialog";
 export default {
   name: "messageList",
   components:{
     mytable,
-    mypage
+    mypage,
+    myDialog
   },
   data() {
     return {
-      typeVal:'',
-      timeVal:'',
-      keyVal:'',
-      searchVal:'',
-      typeOptions:[
+      typeVal:'',     //类型绑定值
+      timeVal:'',     //时间
+      keyVal:'',      //关键字绑定值
+      searchVal:'',  //搜索内容
+      typeOptions:[ //类型下来菜单
         {
           value: '1',
           label: '选项1'
@@ -81,7 +84,7 @@ export default {
           label: '选项3'
         },
       ],
-      keyOptions:[
+      keyOptions:[  //关键字下拉菜单
         {
           value: '1',
           label: '选项1'
@@ -98,7 +101,13 @@ export default {
     }
   },
   methods: {
-
+    tableRedact(index,row){
+      this.$refs.dialog.dialogShow();
+      console.log(index,row);
+    },
+    dialogHidden(){
+      this.dialogVisible = false;
+    }
   }
 }
 </script>

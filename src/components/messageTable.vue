@@ -16,24 +16,27 @@
                     prop="title"
                     label="标题"
                     align="center"
-                    show-overflow-tooltip="true"></el-table-column>
+                    :show-overflow-tooltip="true"></el-table-column>
 
             <el-table-column
                     prop="type"
                     label="类别"
+                    min-width="30"
                     align="center"></el-table-column>
 
             <el-table-column
                 prop="date"
                 label="日期"
+                min-width="50"
                 align="center"></el-table-column>
 
             <el-table-column
                 prop="name"
                 label="管理人"
+                min-width="40"
                 align="center"></el-table-column>
 
-            <el-table-column label="操作" width="143">
+            <el-table-column label="操作" width="145">
                 <template slot-scope="scope">
                     <el-button
                             size="mini"
@@ -85,9 +88,17 @@
             name: 'awdads',
           },
         ],
-        multipleSelection: []
       }
     },
+    methods:{
+        handleEdit(index,row){
+            // console.log(index, row);
+            this.$emit('tableRedact',index,row)
+        },
+        handleDelete(index,row){
+            console.log(index, row);
+        },
+    }
   };
 </script>
 

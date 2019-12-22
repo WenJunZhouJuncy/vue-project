@@ -39,7 +39,7 @@ import elHeaders from '@/components/elHeaders';
     border-bottom: 1px #DCDFE6 solid;
   }
   .el-main{
-    min-width: 810px;
+    min-width: 895px;
   }
 }
 

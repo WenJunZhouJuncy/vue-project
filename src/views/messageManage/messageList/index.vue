@@ -42,6 +42,9 @@
         </el-input>
         <el-button>搜索</el-button>
       </div>
+      <div class="append_box">
+        <el-button @click="appendMsg">新增</el-button>
+      </div>
     </div>
     <div class="table_box mgb30">
       <mytable @tableRedact="tableRedact"></mytable>
@@ -72,41 +75,38 @@ export default {
       searchVal:'',  //搜索内容
       typeOptions:[ //类型下来菜单
         {
-          value: '1',
-          label: '选项1'
+          value: 1,
+          label: '国际信息'
         },
         {
-          value: '2',
-          label: '选项2'
+          value: 2,
+          label: '国内信息'
         },
         {
-          value: '3',
-          label: '选项3'
+          value: 3,
+          label: '行业信息'
         },
       ],
       keyOptions:[  //关键字下拉菜单
         {
-          value: '1',
-          label: '选项1'
+          value: 1,
+          label: 'ID'
         },
         {
-          value: '2',
-          label: '选项2'
-        },
-        {
-          value: '3',
-          label: '选项3'
-        },
+          value: 2,
+          label: '标题'
+        }
       ]
     }
   },
   methods: {
+    //表格组件emit方法
     tableRedact(index,row){
-      this.$refs.dialog.dialogShow();
       console.log(index,row);
     },
-    dialogHidden(){
-      this.dialogVisible = false;
+    // 新增弹窗
+    appendMsg(){
+      this.$refs.dialog.dialogShow();
     }
   }
 }
@@ -144,6 +144,15 @@ export default {
         height: 40px;
         color: #fff;
         background: #409eff;
+        border: none;
+      }
+    }
+    .append_box{
+      button{
+        border-radius: 0px;
+        height: 40px;
+        color: #fff;
+        background: #f56c6c;
         border: none;
       }
     }

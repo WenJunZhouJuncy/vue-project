@@ -6,8 +6,9 @@ import ElementUI from 'element-ui';
 import '@/router/routerIntercept';
 import 'element-ui/lib/theme-chalk/index.css';
 import '@/assets/css/overall.css';
+import msgPro from '@/assets/js/utility'
 
-
+Vue.use(msgPro)
 // Vue.component('abc',{
 //   template:'<div>123132</div>'
 // })

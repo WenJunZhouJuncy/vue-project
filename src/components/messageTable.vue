@@ -40,11 +40,12 @@
                 <template slot-scope="scope">
                     <el-button
                             size="mini"
+                            type="primary"
                             @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                     <el-button
                             size="mini"
                             type="danger"
-                            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                            @click="confirmDel(scope.$index, scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -52,6 +53,7 @@
 </template>
 
 <script>
+    // import {messageBox} from '@/assets/js/utility'
   export default {
     name: "messageTable",
     data() {
@@ -91,13 +93,17 @@
       }
     },
     methods:{
-        handleEdit(index,row){
-            // console.log(index, row);
-            this.$emit('tableRedact',index,row)
-        },
-        handleDelete(index,row){
-            console.log(index, row);
-        },
+      handleEdit(index,row){
+        // console.log(index, row);
+        this.$emit('tableRedact',index,row)
+      },
+      confirmDel(index,row){
+        console.log(index, row);
+        this.confirmMsg('您确定要删除该条信息吗？', this.deleteItem)
+      },
+      deleteItem(){
+        console.log("已经删除啦!");
+      }
     }
   };
 </script>

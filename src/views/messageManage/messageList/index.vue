@@ -50,7 +50,7 @@
       <mytable @tableRedact="tableRedact"></mytable>
     </div>
     <div class="foote_box">
-      <el-button>批量删除</el-button>
+      <el-button @click="confirmDelAll">批量删除</el-button>
       <mypage></mypage>
     </div>
   </div>
@@ -107,6 +107,13 @@ export default {
     // 新增弹窗
     appendMsg(){
       this.$refs.dialog.dialogShow();
+    },
+    // 提示批量删除
+    confirmDelAll(){
+      this.confirmMsg('您确定要删除所选信息吗？', this.deleteSelect)
+    },
+    deleteSelect(){
+      console.log("已删除所选信息");
     }
   }
 }

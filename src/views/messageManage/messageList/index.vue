@@ -43,7 +43,7 @@
         <el-button>搜索</el-button>
       </div>
       <div class="append_box">
-        <el-button @click="appendMsg">新增</el-button>
+        <el-button @click="$refs.dialog.dialogShow()">新增</el-button>
       </div>
     </div>
     <div class="table_box mgb30">
@@ -103,10 +103,6 @@ export default {
     //表格组件emit方法
     tableRedact(index,row){
       console.log(index,row);
-    },
-    // 新增弹窗
-    appendMsg(){
-      this.$refs.dialog.dialogShow();
     },
     // 提示批量删除
     confirmDelAll(){

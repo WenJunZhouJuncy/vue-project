@@ -21,67 +21,68 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogHidden">取 消</el-button>
-                <el-button type="danger" @click="dialogHidden">确 定</el-button>
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="danger" @click="dialogEnter">确 定</el-button>
             </div>
         </el-dialog>
     </div>
 </template>
 
 <script>
-    export default {
-        name: "myDialog",
-        data(){
-            return{
-                dialogVisible:true,
-                optionList: [
-                    {
-                        value: 1,
-                        label: '国际信息'
-                    },
-                    {
-                        value: 2,
-                        label: '国内信息'
-                    },
-                        {
-                        value: 3,
-                        label: '行业信息'
-                    }],
-                form: {
-                    type: '',
-                    title:'',
-                    situation:''
-                },
-            }
+export default {
+  name: "myDialog",
+  data(){
+    return{
+      dialogVisible:true,
+      optionList: [
+        {
+          value: 1,
+          label: '国际信息'
         },
-        methods:{
-            dialogShow(){
-                this.dialogVisible = true;
-            },
-            dialogHidden(){
-                this.dialogVisible = false;
-            }
+        {
+          value: 2,
+          label: '国内信息'
+        },
+        {
+          value: 3,
+          label: '行业信息'
         }
+      ],
+      form: {
+        type: '',
+        title:'',
+        situation:''
+      },
     }
+  },
+  methods:{
+    dialogShow(){
+      this.dialogVisible = true;
+    },
+    dialogEnter(){
+      this.dialogVisible = false;
+    }
+  }
+}
 </script>
 
 <style lang="scss">
 .myDialog{
-    .el-dialog{
-        width: 28%;
+  .el-dialog{
+    width: 28%;
+  }
+  .el-dialog__body{
+    padding: 30px 40px 0px;
+  }
+  .el-dialog__footer{
+    padding: 10px 0 32px 0;
+    text-align: center;
+    button{
+      width: 98px;
+      &:nth-child(2){
+        margin-left: 26px;
+      }
     }
-    .el-dialog__body{
-        padding: 30px 40px 0px;
-    }
-    .el-dialog__footer{
-        padding: 10px 0 32px 0;
-        text-align: center;
-        button{
-            width: 98px;
-            &:nth-child(2){
-                margin-left: 26px;
-            }
-        }
-    }
+  }
 }
 </style>

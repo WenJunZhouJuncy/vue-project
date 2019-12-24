@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {getToken, getUsername} from './token.js'
 
 const BASEURL = process.env.NODE_ENV === 'production' ? '' : '/devApi';
 
@@ -11,8 +12,8 @@ const api = axios.create({//创建拦截器
 api.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
     // 添加头部信息
-    // config.headers.Tokey = '11111';
-    // config.headers.userId = '22222';
+    config.headers.Tokey = getToken();
+    config.headers.UserName = getUsername();
     // console.log(config.headers);
 
     return config;

@@ -38,7 +38,7 @@
                                       style="margin-right: 12px;width: 220px"
                             ></el-input>
                             <el-button v-if="submitDowncount" class="el-button-class" @click="postCode('login')">发送验证码</el-button>
-                            <el-button v-else class="el-button-class" disabled>{{times === 0?'发送中':times + 's'}}</el-button>
+                            <el-button v-else class="el-button-class" disabled :loading="times === 0">{{times === 0?'发送中':times + 's'}}</el-button>
                         </el-form-item>
                         <el-form-item>
                             <el-button class="el-submit-class" @click="submitForm('loginForm')">登录</el-button>
@@ -86,7 +86,7 @@
                                       style="margin-right: 12px;width: 220px"
                             ></el-input>
                             <el-button v-if="registerDowncount" class="el-button-class" @click="postCode('register')">发送验证码</el-button>
-                            <el-button v-else class="el-button-class" disabled>{{times === 0?'发送中':times + 's'}}</el-button>
+                            <el-button v-else class="el-button-class" disabled :loading="times === 0">{{times === 0?'发送中':times + 's'}}</el-button>
                         </el-form-item>
                         <el-form-item>
                             <el-button class="el-submit-class" @click="regForm('registerForm')">注册</el-button>

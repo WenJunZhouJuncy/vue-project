@@ -1,20 +1,20 @@
 <template>
   <div class="messageClassify">
-    <msgDialog ref="dialog" @addendClassify="addendClassify"></msgDialog>
+    <msgDialog ref="dialog" :dialogObj="dialogObj" @addFirstClass="addFirstClass" @redFirstClass="redFirstClass"></msgDialog>
     <div class="addend_classify_box mgb30 pdb30">
-      <el-button type="danger" @click="$refs.dialog.dialogShow()">添加分类</el-button>
+      <el-button type="danger" @click="dialogShow('添加分类')">添加分类</el-button>
     </div>
     <el-collapse>
       <template  v-for="(item,index) in list">
         <div :key="item.id" class="collapse_box">
-          <div class="obtn_box" @mouseenter="enter(index)" :class="{btn_show:index === idx}">
-            <el-button type="success" round @click="addendClassify">添加子级</el-button>
-            <el-button type="primary" round @click="addendClassify">编辑</el-button>
-            <el-button type="danger" round @click="fDelete">删除</el-button>
+          <div class="obtn_box" @mouseenter="idx = index" :class="{btn_show:index === idx}">
+            <el-button type="success" round >添加子级</el-button>
+            <el-button type="primary" round @click="dialogShow('编辑分类', item.id, item.category_name, index)">编辑</el-button>
+            <el-button type="danger" round @click="fDelete(item.id,index)">删除</el-button>
           </div>
           <el-collapse-item class="card">
             <template slot="title">
-              <div class="collapse_title_box" @mouseenter="enter(index)" @mouseleave="leave">
+              <div class="collapse_title_box" @mouseenter="idx = index" @mouseleave="idx = -1">
                 {{item.category_name}}
               </div>
             </template>
@@ -37,7 +37,7 @@
 
 <script>
 import msgDialog from '../components/msgClassifyDialog'
-import { addFirstCategory } from '@/api/messageManage/messageClassify.js'
+import {addFirstCategory, getCategory, deleteCategory, editCategory} from '@/api/messageManage/messageClassify.js'
 export default {
   name: "messageClassify",
   components:{
@@ -45,73 +45,92 @@ export default {
   },
   data() {
     return {
-      idx:-1,
-      list:[
-        {
-          id: "1",
-          category_name: "国际信息",
-          children: [
-            {id: "2",category_name: "111",}
-          ]
-        },
-        {
-          id: "3",
-          category_name: "国内信息",
-          children: [
-            {id: "4",category_name: "222"},
-            {id: "5",category_name: "222"},
-            {id: "6",category_name: "222"}
-          ]
-        },
-        {
-          id: "7",
-          category_name: "国内信息",
-          children: [
-            {id: "8",category_name: "222"},
-            {id: "9",category_name: "222"}
-          ]
-        }
-      ]
+      dialogObj: {
+        idx: '', //序号
+        id: '',
+        dialogType:'',//弹窗类型
+        dialogCategoryName:'' //分类名称
+      },
+      idx: -1,  //鼠标进入离开状态
+      list: []
     }
   },
+  created () {
+    this.getClassify();
+  },
   methods: {
-    // 鼠标进入显示按钮
-    enter(idx){
-      this.idx = idx;
-    },
-    // 鼠标离开隐藏按钮
-    leave(){
-      this.idx = -1;
-    },
-    //添加分类
-    addendClassify(prams){
-      addFirstCategory({categoryName:prams}).then(res =>{
-        if (res.resCode === 0) {
-          this.list.push({
-            id: 121,
-            category_name:prams,
-          })
-          this.$message({
-            type:'success',
-            message:res.message
-          })
-        }
-      }).catch(err =>{
-        this.$message({
-          type:'error',
-          message:err.message
+    // 获取分类
+    getClassify() {
+      getCategory()
+        .then(res => {
+          this.list = res.data.data;
+          console.log(this.list)
         })
-      })
+        .catch(err => {
+          console.log(err);
+        });
     },
-    // 删除分类
-    fDelete(){
-      this.confirmMsg('删除后分类和子级将无法恢复，是否继续？',this.deleteItem)
+    //一级分类弹窗
+    dialogShow(dialogType, id, name, index) {
+      this.dialogObj.dialogType = dialogType;
+      id ? this.dialogObj.id = id : this.dialogObj.id = '';
+      name ? this.dialogObj.dialogCategoryName = name : this.dialogObj.dialogCategoryName = '';
+      index > -1 ? this.dialogObj.idx = index : this.dialogObj.idx = -1;
+      console.log(this.dialogObj.idx);
+      this.$refs.dialog.dialogShow();
     },
-    deleteItem(){
-      console.log("删除成功");
+    //添加一级分类
+    addFirstClass(name) {
+      addFirstCategory({categoryName:name})
+        .then(res => {
+          if (res.resCode === 0) {
+            this.list.push({
+              category_name:name,
+            });
+            this.$message({
+              type:'success',
+              message:res.message
+            });
+          }
+        })
+        .catch(err =>{
+          this.$message({
+            type:'error',
+            message:err.message
+          });
+        });
+    },
+    // 修改一级分类
+    redFirstClass(name) {
+      let parmas = {
+        id: this.dialogObj.id,
+        categoryName: name
+      };
+      editCategory(parmas)
+        .then(res => {
+          this.list[this.dialogObj.idx].category_name = name;
+          this.$message({
+            type: 'success',
+            message: res.message
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 删除一级分类
+    fDelete(id,idx){
+      this.confirmMsg('删除后分类和子级将无法恢复，是否继续？')
+        .then(() => {
+          deleteCategory({categoryId:id})
+          this.list.splice(idx,1)
+        })
+        .catch(() => {
+
+        })
     }
   }
-}
+};
 </script>
 
 <style lang="scss">

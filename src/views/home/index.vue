@@ -30,8 +30,14 @@ import elHeaders from '@/components/elHeaders';
 
 <style lang="scss">
 .home{
+  .el-container{
+    height: 100vh !important;
+  }
   .el-aside{
     width: 250px !important;
+    .el_asides{
+        height: 100% !important;
+    }
   }
   .el-header{
     min-width: 580px;

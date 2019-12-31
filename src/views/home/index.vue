@@ -1,31 +1,31 @@
 <template>
-    <div class="home">
-        <el-container>
-            <el-aside>
-              <elAsides></elAsides>
-            </el-aside>
-            <el-container>
-                <el-header class="pdlr30">
-                  <elHeaders></elHeaders>
-                </el-header>
-                <el-main class="pd30">
-                  <router-view></router-view>
-                </el-main>
-            </el-container>
-        </el-container>
-    </div>
+  <div class="home">
+    <el-container>
+      <el-aside>
+        <elAsides></elAsides>
+      </el-aside>
+      <el-container>
+        <el-header class="pdlr30">
+          <elHeaders></elHeaders>
+        </el-header>
+        <el-main class="pd30">
+          <router-view></router-view>
+        </el-main>
+      </el-container>
+    </el-container>
+  </div>
 </template>
 
 <script>
 import elAsides from '@/components/elAsides';
 import elHeaders from '@/components/elHeaders';
-    export default {
-        name: "index",
-        components:{
-            elAsides,
-            elHeaders
-        }
-    }
+export default {
+  name: "index",
+  components:{
+    elAsides,
+    elHeaders
+  }
+}
 </script>
 
 <style lang="scss">
@@ -36,7 +36,7 @@ import elHeaders from '@/components/elHeaders';
   .el-aside{
     width: 250px !important;
     .el_asides{
-        height: 100% !important;
+      height: 100% !important;
     }
   }
   .el-header{
@@ -48,5 +48,4 @@ import elHeaders from '@/components/elHeaders';
     min-width: 895px;
   }
 }
-
 </style>

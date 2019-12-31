@@ -9,7 +9,7 @@
         <div :key="item.id" class="collapse_box">
           <div class="obtn_box" @mouseenter="idx = index" :class="{btn_show:index === idx}">
             <el-button type="success" round >添加子级</el-button>
-            <el-button type="primary" round @click="dialogShow('编辑分类', item.id, item.category_name, index)">编辑</el-button>
+            <el-button type="primary" round @click="dialogShow('编辑分类', item, index)">编辑</el-button>
             <el-button type="danger" round @click="fDelete(item.id,index)">删除</el-button>
           </div>
           <el-collapse-item class="card">
@@ -71,13 +71,16 @@ export default {
         });
     },
     //一级分类弹窗
-    dialogShow(dialogType, id, name, index) {
+    dialogShow(dialogType, obj, index) {
       this.dialogObj.dialogType = dialogType;
-      id ? this.dialogObj.id = id : this.dialogObj.id = '';
-      name ? this.dialogObj.dialogCategoryName = name : this.dialogObj.dialogCategoryName = '';
+      obj ? this.dialogObj.id = obj.id : this.dialogObj.id = '';
+      obj ? this.dialogObj.dialogCategoryName = obj.category_name : this.dialogObj.dialogCategoryName = '';
       index > -1 ? this.dialogObj.idx = index : this.dialogObj.idx = -1;
-      console.log(this.dialogObj.idx);
       this.$refs.dialog.dialogShow();
+      //表单自动聚焦
+      this.$nextTick(() => {
+        this.$refs.dialog.$refs.autofocus.focus();
+      })
     },
     //添加一级分类
     addFirstClass(name) {

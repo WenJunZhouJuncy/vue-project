@@ -1,6 +1,6 @@
 <template>
   <div class="msgClassifyDialog">
-    <el-dialog :title="dialogObj.dialogType" :visible.sync="dialogVisible" lock-scroll>
+    <el-dialog :title="dialogObj.dialogType" :visible.sync="dialogVisible" lock-scroll @closed="form.firstOrder = ''">
       <el-form :model="form" ref="ruleForm" label-width="96px" >
         <el-form-item
           label="第一级分类:"
@@ -8,13 +8,13 @@
           :rules="[
             { required: true, message: '分类不能为空!'},
         ]">
-          <el-input v-model="form.firstOrder" placeholder="请输入内容" @keyup.enter.native="dialogEnter"></el-input>
+          <el-input v-model="form.firstOrder" ref="autofocus" placeholder="请输入内容" @keyup.enter.native="dialogEnter(dialogObj.dialogType)"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogEnter('添加分类')" v-show="dialogObj.dialogType === '添加分类'">确 定</el-button>
-        <el-button type="primary" @click="dialogEnter('编辑分类')" v-show="dialogObj.dialogType === '编辑分类'">确 定</el-button>
+        <el-button type="primary" @click="dialogEnter(dialogObj.dialogType)" v-show="dialogObj.dialogType === '添加分类'">确 定</el-button>
+        <el-button type="primary" @click="dialogEnter(dialogObj.dialogType)" v-show="dialogObj.dialogType === '编辑分类'">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -23,19 +23,19 @@
 <script>
 export default {
   name: "msgClassifyDialog",
-  props:{
-    dialogObj:{
+  props: {
+    dialogObj: {
       type: Object,
       default: null,
     }
   },
-  data(){
-    return{
+  data() {
+    return {
       dialogVisible: false,
       form: {
         firstOrder:'',
       }
-    }
+    };
   },
   watch:{
     'dialogObj.dialogCategoryName'(newVal,oldVal){
@@ -50,6 +50,7 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           classfiy === '添加分类'? this.$emit('addFirstClass',this.form.firstOrder): this.$emit('redFirstClass',this.form.firstOrder)
+          this.dialogVisible = false;
           this.form.firstOrder = '';
         }
       });

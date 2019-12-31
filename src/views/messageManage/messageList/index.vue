@@ -6,39 +6,39 @@
         <span class="mgr10">类型:</span>
         <el-select class="option" v-model="typeVal" filterable clearable placeholder="请选择">
           <el-option
-                  v-for="item in typeOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
+            v-for="item in typeOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
           </el-option>
         </el-select>
       </div>
       <div class="time_box mgr30">
         <span class="mgr10">日期:</span>
         <el-date-picker
-                v-model="timeVal"
-                type="daterange"
-                range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期">
+          v-model="timeVal"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期">
         </el-date-picker>
       </div>
       <div class="keyword_box mgr30">
         <span class="mgr10">关键字:</span>
         <el-select class="option" v-model="keyVal" filterable clearable placeholder="请选择">
           <el-option
-                  v-for="item in keyOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
+            v-for="item in keyOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
           </el-option>
         </el-select>
       </div>
       <div class="search_box mgr30">
         <el-input
-                placeholder="请输入内容"
-                prefix-icon="el-icon-search"
-                v-model="searchVal">
+          placeholder="请输入内容"
+          prefix-icon="el-icon-search"
+          v-model="searchVal">
         </el-input>
         <el-button>搜索</el-button>
       </div>
@@ -60,20 +60,21 @@
 import mytable from '@/components/messageTable';
 import mypage from '@/components/myPage';
 import myDialog from "@/components/myDialog";
+import {getList} from '@/api/messageList/messageList.js'
 export default {
   name: "messageList",
-  components:{
+  components: {
     mytable,
     mypage,
     myDialog
   },
   data() {
     return {
-      typeVal:'',     //类型绑定值
-      timeVal:'',     //时间
-      keyVal:'',      //关键字绑定值
-      searchVal:'',  //搜索内容
-      typeOptions:[ //类型下来菜单
+      typeVal: '',     //类型绑定值
+      timeVal: '',     //时间
+      keyVal: '',      //关键字绑定值
+      searchVal: '',  //搜索内容
+      typeOptions: [ //类型下来菜单
         {
           value: 1,
           label: '国际信息'
@@ -101,18 +102,33 @@ export default {
   },
   methods: {
     //表格组件emit方法
-    tableRedact(index,row){
-      console.log(index,row);
+    tableRedact(index, row){
+      console.log(index, row);
     },
     // 提示批量删除
     confirmDelAll(){
-      this.confirmMsg('您确定要删除所选信息吗？', this.deleteSelect)
+      getList({
+        // categoryId: ,
+        // startTiem: ,
+        // endTime: ,
+        // title: ,
+        // id: ,
+        pageNumber: 1,
+        pageSize: 10,
+      })
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err =>{
+          console.log(err);
+        });
+      // this.confirmMsg('您确定要删除所选信息吗？', this.deleteSelect)
     },
-    deleteSelect(){
+    deleteSelect() {
       console.log("已删除所选信息");
     }
   }
-}
+};
 </script>
 
 <style lang="scss">

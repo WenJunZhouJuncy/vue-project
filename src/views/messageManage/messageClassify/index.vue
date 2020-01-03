@@ -1,6 +1,6 @@
 <template>
   <div class="messageClassify">
-    <msgDialog ref="dialog" :dialogObj="dialogObj" @addFirstClass="addFirstClass" @redFirstClass="redFirstClass"></msgDialog>
+    <msgDialog ref="dialog" :dialogObj="dialogObj" @addFirstClass="addFirstClass" @alterFirstClass="alterFirstClass" @addSecondClass="addSecondClass"></msgDialog>
     <div class="addend_classify_box mgb30 pdb30">
       <el-button type="danger" @click="dialogShow('添加分类')">添加分类</el-button>
     </div>
@@ -8,9 +8,9 @@
       <template  v-for="(item,index) in list">
         <div :key="item.id" class="collapse_box">
           <div class="obtn_box" @mouseenter="idx = index" :class="{btn_show:index === idx}">
-            <el-button type="success" round >添加子级</el-button>
+            <el-button type="success" round @click="dialogShow('添加子级分类', item, index)">添加子级</el-button>
             <el-button type="primary" round @click="dialogShow('编辑分类', item, index)">编辑</el-button>
-            <el-button type="danger" round @click="fDelete(item.id,index)">删除</el-button>
+            <el-button type="danger" round @click="DeleteFirstClass(item.id,index)">删除</el-button>
           </div>
           <el-collapse-item class="card">
             <template slot="title">
@@ -37,7 +37,8 @@
 
 <script>
 import msgDialog from '../components/msgClassifyDialog'
-import {addFirstCategory, getCategory, deleteCategory, editCategory} from '@/api/messageManage/messageClassify.js'
+import {apiAddFirstCategory, apiEditCategory, apiDeleteCategory, apiAddChildrenCategory} from '@/api/messageClassify'
+import {commonGetCategory} from '@/api/common'
 export default {
   name: "messageClassify",
   components:{
@@ -59,22 +60,16 @@ export default {
     this.getClassify();
   },
   methods: {
-    // 获取分类
-    getClassify() {
-      getCategory()
-        .then(res => {
-          this.list = res.data.data;
-          console.log(this.list)
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
     //一级分类弹窗
     dialogShow(dialogType, obj, index) {
       this.dialogObj.dialogType = dialogType;
-      obj ? this.dialogObj.id = obj.id : this.dialogObj.id = '';
-      obj ? this.dialogObj.dialogCategoryName = obj.category_name : this.dialogObj.dialogCategoryName = '';
+      if (obj) {
+        this.dialogObj.id = obj.id;
+        this.dialogObj.dialogCategoryName = obj.category_name;
+      } else {
+        this.dialogObj.id = '';
+        this.dialogObj.dialogCategoryName = '';
+      };
       index > -1 ? this.dialogObj.idx = index : this.dialogObj.idx = -1;
       this.$refs.dialog.dialogShow();
       //表单自动聚焦
@@ -82,9 +77,22 @@ export default {
         this.$refs.dialog.$refs.autofocus.focus();
       })
     },
+    // 获取分类
+    getClassify() {
+      commonGetCategory()
+        .then(res => {
+          this.list = res.data.data
+        })
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: err.message
+          })
+        })
+    },
     //添加一级分类
     addFirstClass(name) {
-      addFirstCategory({categoryName:name})
+      apiAddFirstCategory({categoryName:name})
         .then(res => {
           if (res.resCode === 0) {
             this.list.push({
@@ -104,12 +112,12 @@ export default {
         });
     },
     // 修改一级分类
-    redFirstClass(name) {
+    alterFirstClass(name) {
       let parmas = {
         id: this.dialogObj.id,
         categoryName: name
       };
-      editCategory(parmas)
+      apiEditCategory(parmas)
         .then(res => {
           this.list[this.dialogObj.idx].category_name = name;
           this.$message({
@@ -117,19 +125,55 @@ export default {
             message: res.message
           });
         })
-        .catch(err => {
-          console.log(err);
+        .catch(err =>{
+          this.$message({
+            type:'error',
+            message:err.message
+          });
         });
     },
     // 删除一级分类
-    fDelete(id,idx){
+    DeleteFirstClass(id,idx){
       this.confirmMsg('删除后分类和子级将无法恢复，是否继续？')
         .then(() => {
-          deleteCategory({categoryId:id})
-          this.list.splice(idx,1)
+          apiDeleteCategory({categoryId:id})
+            .then(res =>{
+              this.list.splice(idx,1)
+              this.$message({
+                type: 'success',
+                message: res.message
+              });
+            })
+            .catch(err =>{
+              this.$message({
+                type:'error',
+                message: err.message
+              });
+            })
         })
-        .catch(() => {
-
+        .catch( ()=>{
+          this.$message({
+            type:'info',
+            message:'已取消删除'
+          });
+        });
+    },
+    // 添加二级分类
+    addSecondClass(name){
+      let parmas = {
+        categoryName: name,
+        parentId: this.dialogObj.id
+      }
+      apiAddChildrenCategory(parmas)
+        .then(res => {
+          console.log(res);
+          this.$message({
+            type: 'success',
+            message: res.message
+          })
+        })
+        .catch(err =>{
+          console.log(err);
         })
     }
   }

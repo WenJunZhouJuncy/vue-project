@@ -1,20 +1,38 @@
 <template>
   <div class="msgClassifyDialog">
-    <el-dialog :title="dialogObj.dialogType" :visible.sync="dialogVisible" lock-scroll @closed="form.firstOrder = ''">
-      <el-form :model="form" ref="ruleForm" label-width="96px" >
+    <el-dialog :title="dialogObj.dialogType" :visible.sync="dialogVisible" lock-scroll @closed="closed">
+      <el-form :model="form" ref="ruleForm" label-width="115px" >
         <el-form-item
-          label="第一级分类:"
+          label="一级分类名称:"
           prop="firstOrder"
           :rules="[
             { required: true, message: '分类不能为空!'},
         ]">
-          <el-input v-model="form.firstOrder" ref="autofocus" placeholder="请输入内容" @keyup.enter.native="dialogEnter(dialogObj.dialogType)"></el-input>
+          <el-input
+            v-model="form.firstOrder"
+            ref="autofocus"
+            placeholder="请输入内容"
+            :disabled="dialogObj.dialogType === '添加子级分类'"
+            @keyup.enter.native="dialogEnter(dialogObj.dialogType)" />
+        </el-form-item>
+        <el-form-item
+          v-if="dialogObj.dialogType === '添加子级分类'"
+          label="二级分类名称:"
+          prop="secondOrder"
+          :rules="[
+            { required: true, message: '分类不能为空!'},
+        ]">
+          <el-input
+            v-model="form.secondOrder"
+            placeholder="请输入内容"
+            @keyup.enter.native="dialogEnter(dialogObj.dialogType)" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dialogEnter(dialogObj.dialogType)" v-show="dialogObj.dialogType === '添加分类'">确 定</el-button>
         <el-button type="primary" @click="dialogEnter(dialogObj.dialogType)" v-show="dialogObj.dialogType === '编辑分类'">确 定</el-button>
+        <el-button type="primary" @click="dialogEnter(dialogObj.dialogType)" v-show="dialogObj.dialogType === '添加子级分类'">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -33,25 +51,37 @@ export default {
     return {
       dialogVisible: false,
       form: {
-        firstOrder:'',
+        firstOrder: '',
+        secondOrder: '',
       }
     };
   },
   watch:{
-    'dialogObj.dialogCategoryName'(newVal,oldVal){
-      this.form.firstOrder = newVal
+    'dialogObj.dialogCategoryName' (newVal) {
+      this.form.firstOrder = newVal;
     }
   },
   methods:{
-    dialogShow(){
+    // 显示弹窗
+    dialogShow() {
       this.dialogVisible = true;
     },
+    // 关闭弹窗回调
+    closed() {
+      if (this.dialogObj.dialogType === '添加分类'){
+        this.form.firstOrder = '';
+      } else if (this.dialogObj.dialogType === '添加子级分类'){
+        this.form.secondOrder = '';
+      }
+    },
+    // 弹窗确定
     dialogEnter(classfiy){
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          classfiy === '添加分类'? this.$emit('addFirstClass',this.form.firstOrder): this.$emit('redFirstClass',this.form.firstOrder)
+          classfiy === '添加分类'? this.$emit('addFirstClass',this.form.firstOrder)
+            : classfiy === '编辑分类'? this.$emit('alterFirstClass',this.form.firstOrder)
+            : this.$emit('addSecondClass',this.form.secondOrder);
           this.dialogVisible = false;
-          this.form.firstOrder = '';
         }
       });
     }

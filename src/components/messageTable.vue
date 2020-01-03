@@ -5,6 +5,7 @@
       ref="multipleTable"
       :data="tableData"
       tooltip-effect="dark"
+      @selection-change="selectionChange"
       style="width: 100%">
       <el-table-column
         type="selection"
@@ -18,15 +19,16 @@
         :show-overflow-tooltip="true"></el-table-column>
 
       <el-table-column
-        prop="type"
+        prop="categoryId"
         label="类别"
         min-width="30"
         align="center"></el-table-column>
 
       <el-table-column
-        prop="date"
+        prop="createDate"
         label="日期"
         min-width="50"
+        sortable
         align="center"></el-table-column>
 
       <el-table-column
@@ -52,56 +54,32 @@
 </template>
 
 <script>
-// import {messageBox} from '@/assets/js/utility'
 export default {
   name: "messageTable",
-  data() {
-    return {
-      tableData: [
-        {
-          title:'亿万用户提供高效稳定便捷的电子',
-          type: 'aaa',
-          date: '2016-05-03',
-          name: 'aadad',
-        },
-        {
-          title:'腾讯公司2002年推出，向用',
-          type: 'bbb',
-          date: '2016-05-02',
-          name: 'tryrtt',
-        },
-        {
-          title:'亿万用户提供高效稳定便捷的电子',
-          type: 'ccc',
-          date: '2016-05-04',
-          name: 'rtgfj',
-        },
-        {
-          title:'务以高速电信骨干网为强大',
-          type: 'ddd',
-          date: '2016-05-01',
-          name: 'ftyjcv',
-        },
-        {
-          title:'户使用的比较多的一个邮',
-          type: 'eee',
-          date: '2016-05-08',
-          name: 'awdads',
-        },
-      ],
+  props: {
+    tableData:{
+      type: Array,
+      default: null
     }
   },
-  methods:{
+  data() {
+    return {
+      selectionChangeVal: [],
+    }
+  },
+  methods: {
+    //编辑
     handleEdit(index,row){
       // console.log(index, row);
-      this.$emit('tableRedact',index,row)
+      this.$emit('dialogShow',index,row)
     },
-    confirmDel(index,row){
-      console.log(index, row);
-      this.confirmMsg('您确定要删除该条信息吗？', this.deleteItem)
+    // 删除
+    confirmDel(index, row){
+      this.$emit('deleteListMsg', index, row)
     },
-    deleteItem(){
-      console.log("已经删除啦!");
+    // 表格选中值发生改变时
+    selectionChange (val){
+      this.selectionChangeVal = val;
     }
   }
 };

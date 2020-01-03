@@ -36,13 +36,11 @@ export default {
   name: "el_asides",
   created(){
     this.routes = this.$router.options.routes[0].children;
-    console.log(this.routes);
-    
   },
   data() {
     return {
       routes:null,
-    }
+    };
   },
   methods: {
     handleOpen(key, keyPath) {

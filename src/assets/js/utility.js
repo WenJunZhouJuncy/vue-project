@@ -1,4 +1,4 @@
-import { MessageBox, Message} from 'element-ui';
+import { MessageBox} from 'element-ui';
 // import Vue from 'vue'
 // export function messageBox(info, fn) {
 //   MessageBox.confirm( info, '提示', {
@@ -32,19 +32,20 @@ export default {
           center: true
         })
           .then(() => {
-            resolve()
+            resolve();
           })
           .catch(() => {
-            reject()
+            reject();
           });
-      })
-    }
+      });
+    };
   }
-}
+};
 
 // 时间
-export function getTime(){
-  var date = new Date()
+export function getTime(data){
+  var date = '';
+  data ? date = new Date(data) : date = new Date();
   var year = date.getFullYear();
   var month = date.getMonth() + 1;
   var day = date.getDate();

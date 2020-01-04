@@ -51,7 +51,7 @@
     </div>
     <div class="foote_box">
       <el-button @click="deleteListMsgAll">批量删除</el-button>
-      <mypage></mypage>
+      <mypage :total="total" @currentChange="currentChange"></mypage>
     </div>
   </div>
 </template>
@@ -62,6 +62,7 @@ import mypage from '@/components/myPage';
 import msgListDialog from "@/views/messageManage/components/msgListDialog";
 import {apiGetListMsg, apiAddListMsg, apiEditInfo, apiDeleteInfo} from '@/api/messageList'
 import {commonGetCategory} from '@/api/common'
+import {getTime} from '@/assets/js/utility'
 export default {
   name: "messageList",
   components: {
@@ -87,8 +88,10 @@ export default {
         }
       ],
       tableData: [],
-      alterTableIndex: '',
-      alterTableRow: {},
+      alterTableIndex: '',  //编辑表格当前行的索引
+      alterTableRow: {},  //编辑表格当前行数据
+      currentIndex: 1,  //当前页码
+      total: 0, //总页码数
     };
   },
   created() {
@@ -116,21 +119,28 @@ export default {
     },
     //获取表格信息
     getTableMsg(){
-      apiGetListMsg({
+      let parmas = {
         categoryId: '',
         startTiem: '',
         endTime: '',
         title: '',
         id: '',
-        pageNumber: 1,
+        pageNumber: this.currentIndex,
         pageSize: 10,
-      })
+      };
+      apiGetListMsg(parmas)
       .then(res => {
+        // let tableDataList = res.data.data;
+        // tableDataList.forEach((e, i) => {
+        //   tableDataList[i].createDate = getTime(Number(e.createDate));
+        // })
+        // console.log(tableDataList);
         this.tableData = res.data.data;
+        this.total = res.data.total
       })
     },
     //添加信息
-    addListMsg(form){
+    addListMsg(form) {
       apiAddListMsg(form)
         .then(res => {
           // this.tableData.push()
@@ -229,6 +239,10 @@ export default {
           });
         });
     },
+    currentChange(Val){
+      this.currentIndex = Val;
+      this.getTableMsg()
+    }
   }
 };
 </script>

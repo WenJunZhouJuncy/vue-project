@@ -17,10 +17,11 @@
 </template>
 
 <script>
+import {getTime} from '@/assets/js/utility'
 export default {
   name: "el_headers",
   created(){
-
+    this.time = getTime()
   },
   data() {
     return {

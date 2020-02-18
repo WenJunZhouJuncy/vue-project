@@ -4,7 +4,7 @@
     <div class="top_box mgb30">
       <div class="type_box mgr30">
         <span class="mgr10">类别:</span>
-        <el-select class="option" v-model="typeVal" filterable clearable placeholder="请选择">
+        <el-select class="option" v-model="typeVal" filterable clearable placeholder="请选择" @change="handlTypeChange">
           <el-option
             v-for="item in typeOptions"
             :key="item.id"
@@ -20,7 +20,8 @@
           type="daterange"
           range-separator="-"
           start-placeholder="开始日期"
-          end-placeholder="结束日期">
+          end-placeholder="结束日期"
+          @change="handlTimeChange">
         </el-date-picker>
       </div>
       <div class="keyword_box mgr30">
@@ -40,14 +41,14 @@
           prefix-icon="el-icon-search"
           v-model="searchVal">
         </el-input>
-        <el-button>搜索</el-button>
+        <el-button @click="getTableMsg" :disabled="tableLoading">搜索</el-button>
       </div>
       <div class="append_box">
         <el-button @click="dialogShow">新增</el-button>
       </div>
     </div>
     <div class="table_box mgb30">
-      <mytable ref="mytable" :tableData="tableData" @dialogShow="dialogShow" @deleteListMsg="deleteListMsg"></mytable>
+      <mytable ref="mytable" :tableData="tableData" :tableLoading="tableLoading" :typeOptions="typeOptions" @dialogShow="dialogShow" @deleteListMsg="deleteListMsg"></mytable>
     </div>
     <div class="foote_box">
       <el-button @click="deleteListMsgAll">批量删除</el-button>
@@ -62,7 +63,6 @@ import mypage from '@/components/myPage';
 import msgListDialog from "@/views/messageManage/components/msgListDialog";
 import {apiGetListMsg, apiAddListMsg, apiEditInfo, apiDeleteInfo} from '@/api/messageList'
 import {commonGetCategory} from '@/api/common'
-import {getTime} from '@/assets/js/utility'
 export default {
   name: "messageList",
   components: {
@@ -72,6 +72,7 @@ export default {
   },
   data() {
     return {
+      tableLoading: false,
       typeVal: '',     //类型绑定值
       timeVal: '',     //时间
       keyVal: '',      //关键字绑定值
@@ -92,6 +93,14 @@ export default {
       alterTableRow: {},  //编辑表格当前行数据
       currentIndex: 1,  //当前页码
       total: 0, //总页码数
+      parmasData: {
+        categoryId: '',
+        startTime: '',
+        endTime: '',
+        title: '',
+        id: '',
+        pageSize: 10,
+      }
     };
   },
   created() {
@@ -113,86 +122,103 @@ export default {
     // 获取分类
     getClassify() {
       commonGetCategory()
-        .then(res => {
+      .then(res => {
         this.typeOptions = res.data.data;
       });
     },
     //获取表格信息
     getTableMsg(){
+      // 搜索： 1 => id ; 2 => 标题
+      if (this.keyVal === 1){
+        this.parmasData.title = '';
+        this.parmasData.id = this.searchVal;
+      }else if(this.keyVal === 2){
+        this.parmasData.id = '';
+        this.parmasData.title = this.searchVal;
+      }else {
+        this.parmasData.id = '';
+        this.parmasData.title = '';
+      }
+      this.tableLoading = true;
       let parmas = {
-        categoryId: '',
-        startTiem: '',
-        endTime: '',
-        title: '',
-        id: '',
+        ...this.parmasData,
         pageNumber: this.currentIndex,
-        pageSize: 10,
       };
       apiGetListMsg(parmas)
       .then(res => {
-        // let tableDataList = res.data.data;
-        // tableDataList.forEach((e, i) => {
-        //   tableDataList[i].createDate = getTime(Number(e.createDate));
-        // })
-        // console.log(tableDataList);
         this.tableData = res.data.data;
         this.total = res.data.total
+        this.tableLoading = false;
       })
     },
     //添加信息
-    addListMsg(form) {
-      apiAddListMsg(form)
-        .then(res => {
-          // this.tableData.push()
-          this.$message({
-            type: 'success',
-            message: res.message
-          });
-          this.getTableMsg();
-          this.$refs.dialog.closed();  //关闭新增弹窗后回调
-        })
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: err.message
-          });
+    async addListMsg(form) {
+      try {
+        const res = await apiAddListMsg(form)
+        await this.getTableMsg();
+        this.$message({
+          type: 'success',
+          message: res.message
         });
+        this.$refs.dialog.closed();  //关闭新增弹窗后回调
+      } catch (err) {
+        this.$message({
+          type: 'error',
+          message: err.message
+        });
+      }
     },
     // 修改表格信息
-    alterListMsg(form){
-      let parmas = {
-        id: this.alterTableRow.id,
-        categoryId: form.category,
-        title: form.title,
-        content: form.content,
-      };
-      apiEditInfo(parmas)
-        .then(res => {
-          this.getTableMsg()
-          this.$message({
-            type: 'success',
-            message: res.message
-          })
-          this.$refs.dialog.closed();
+    async alterListMsg(form){
+      try {
+        let parmas = {
+          id: this.alterTableRow.id,
+          categoryId: form.category,
+          title: form.title,
+          content: form.content,
+        };
+        const res = await apiEditInfo(parmas);
+        await this.getTableMsg()
+        this.$message({
+          type: 'success',
+          message: res.message
         })
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: '请不要输入特殊符号！'
-          })
+        this.$refs.dialog.closed();
+      } catch (err) {
+        this.$message({
+          type: 'error',
+          message: '请不要输入特殊符号！'
         })
+      }
     },
     // 提示删除单个信息
-    deleteListMsg(index, row) {
+    deleteListMsg(row) {
       this.confirmMsg('您确定要删除该条信息吗？')
         .then(() => {
           let arr = [row.id]
-          this.deleteListMsgItem(index, arr)
+          this.deleteListMsgItem(arr)
         })
         .catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
+          });
+        });
+    },
+    // 执行删除操作
+    deleteListMsgItem(arr) {
+      apiDeleteInfo({id: arr})
+        .then(res => {
+          this.getTableMsg();
+          this.$message({
+            type: 'success',
+            message: res.message
+          });
+        })
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: err.message
           });
         });
     },
@@ -213,7 +239,7 @@ export default {
       }
       this.confirmMsg('删除所选信息将无法恢复，确定要继续吗？')
         .then(() => {
-          this.deleteListMsgItem(-1, arr)
+          this.deleteListMsgItem(arr)
         })
         .catch(() => {
           this.$message({
@@ -222,26 +248,39 @@ export default {
           });
         });
     },
-    // 执行删除操作
-    deleteListMsgItem(index, arr) {
-      apiDeleteInfo({id: arr})
-        .then(res => {
-          index === -1? this.getTableMsg() : this.tableData.splice(index,1);
-          this.$message({
-            type: 'success',
-            message: res.message
-          });
-        })
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: err.message
-          });
-        });
+    // 类别选择器
+    handlTypeChange(){
+      this.parmasData.categoryId = this.typeVal;
     },
+    // 时间筛选
+    handlTimeChange(){
+      // console.log(this.timeVal);
+      if (this.timeVal){
+        this.parmasData.startTime = this.timeVal[0].getFullYear() + '-' + this.checkTime(this.timeVal[0].getMonth() + 1) + '-' + this.checkTime(this.timeVal[0].getDate()) + ' ' +
+          this.checkTime(this.timeVal[0].getHours()) + ':' +
+          this.checkTime(this.timeVal[0].getMinutes()) + ':' +
+          this.checkTime(this.timeVal[0].getSeconds())
+        this.parmasData.endTime = this.timeVal[1].getFullYear() + '-' +
+          this.checkTime(this.timeVal[1].getMonth() + 1) + '-' +
+          this.checkTime(this.timeVal[1].getDate()) + ' ' +
+          this.checkTime(this.timeVal[1].getHours()) + ':' +
+          this.checkTime(this.timeVal[1].getMinutes()) + ':' +
+          this.checkTime(this.timeVal[1].getSeconds())
+      }else {
+        this.parmasData.startTime = '';
+        this.parmasData.endTime = '';
+      }
+    },
+    // 分页器
     currentChange(Val){
       this.currentIndex = Val;
       this.getTableMsg()
+    },
+    checkTime(i){
+      if(i<10){
+        i = '0'+i
+      }
+      return i
     }
   }
 };

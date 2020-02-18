@@ -8,9 +8,8 @@
       <template  v-for="(item,index) in list">
         <div :key="item.id" class="collapse_box">
           <div class="obtn_box" @mouseenter="idx = index" :class="{btn_show:index === idx}">
-            <el-button type="success" round @click="dialogShow('添加子级分类', item, index)">添加子级</el-button>
             <el-button type="primary" round @click="dialogShow('编辑分类', item, index)">编辑</el-button>
-            <el-button type="danger" round @click="DeleteFirstClass(item.id,index)">删除</el-button>
+            <el-button type="danger" round @click="DeleteFirstClass(item.id)">删除</el-button>
           </div>
           <el-collapse-item class="card">
             <template slot="title">
@@ -23,7 +22,7 @@
                 {{i.category_name}}
                 <div class="tbtn_box">
                   <el-button type="primary" round>编辑</el-button>
-                  <el-button type="danger" round>删除</el-button>
+                  <el-button type="danger" round @click="DeleteFirstClass(i.id)">删除</el-button>
                 </div>
               </li>
             </ul>
@@ -102,6 +101,7 @@ export default {
               type:'success',
               message:res.message
             });
+            this.getClassify()
           }
         })
         .catch(err =>{
@@ -132,13 +132,14 @@ export default {
           });
         });
     },
-    // 删除一级分类
-    DeleteFirstClass(id,idx){
+    // 删除分类
+    DeleteFirstClass(id){
+      console.log(id);
       this.confirmMsg('删除后分类和子级将无法恢复，是否继续？')
         .then(() => {
           apiDeleteCategory({categoryId:id})
             .then(res =>{
-              this.list.splice(idx,1)
+              this.getClassify();
               this.$message({
                 type: 'success',
                 message: res.message
@@ -164,16 +165,20 @@ export default {
         categoryName: name,
         parentId: this.dialogObj.id
       }
+      console.log(this.dialogObj.id)
       apiAddChildrenCategory(parmas)
         .then(res => {
-          console.log(res);
           this.$message({
             type: 'success',
             message: res.message
-          })
+          });
+          this.getClassify()
         })
         .catch(err =>{
-          console.log(err);
+          this.$message({
+            type: 'error',
+            message: err.message
+          })
         })
     }
   }

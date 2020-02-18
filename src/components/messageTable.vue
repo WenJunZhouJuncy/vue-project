@@ -2,6 +2,9 @@
   <div class="messageTable">
     <el-table
       border
+      v-loading="tableLoading"
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
       ref="multipleTable"
       :data="tableData"
       tooltip-effect="dark"
@@ -22,6 +25,7 @@
         prop="categoryId"
         label="类别"
         min-width="30"
+        :formatter="matterType"
         align="center"></el-table-column>
 
       <el-table-column
@@ -29,13 +33,16 @@
         label="日期"
         min-width="50"
         sortable
+        :formatter="matterTime"
         align="center"></el-table-column>
 
       <el-table-column
-        prop="name"
+
         label="管理人"
         min-width="40"
-        align="center"></el-table-column>
+        align="center">
+        juncy
+      </el-table-column>
 
       <el-table-column label="操作" width="145">
         <template slot-scope="scope">
@@ -54,10 +61,19 @@
 </template>
 
 <script>
+import {timestampToTime} from '@/assets/js/utility'
 export default {
   name: "messageTable",
   props: {
     tableData:{
+      type: Array,
+      default: null
+    },
+    tableLoading:{
+      type: Boolean,
+      default: false
+    },
+    typeOptions:{
       type: Array,
       default: null
     }
@@ -68,6 +84,13 @@ export default {
     }
   },
   methods: {
+    matterTime(row, column, cellValue, index){
+      return timestampToTime(cellValue)
+    },
+    matterType(row, column, cellValue, index){
+      let e = this.typeOptions.find(e => cellValue == e.id)
+      return e.category_name
+    },
     //编辑
     handleEdit(index,row){
       // console.log(index, row);
@@ -75,12 +98,12 @@ export default {
     },
     // 删除
     confirmDel(index, row){
-      this.$emit('deleteListMsg', index, row)
+      this.$emit('deleteListMsg', row)
     },
     // 表格选中值发生改变时
     selectionChange (val){
       this.selectionChangeVal = val;
-    }
+    },
   }
 };
 </script>

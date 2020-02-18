@@ -1,15 +1,6 @@
 // /news/getCategory/
 import api from "@/assets/js/request.js";
 
-//获取子级分类/news/getCategoryAll/
-export function apiGetCategoryAll(data) {
-  return api.request({
-    method: 'post',
-    url: '/news/getCategoryAll/',
-    data
-  })
-}
-
 //添加一级分类
 export function apiAddFirstCategory(data) {
   return api.request({

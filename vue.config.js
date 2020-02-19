@@ -59,7 +59,7 @@ module.exports = {
     // proxy: null, // 设置代理
     proxy:{
       '/devApi':{
-        target:"http://www.web-jshtml.cn/productapi/token",
+        target:"http://www.web-jshtml.cn/dependenciesapi/token",
         changeOrigin: true,
         pathRewrite:{
           '^/devApi':''

@@ -17,10 +17,11 @@
 </template>
 
 <script>
+import {getTime} from '@/assets/js/utility'
 export default {
   name: "el_headers",
   created(){
-    this.getTime()
+    this.time = getTime()
   },
   data() {
     return {
@@ -28,13 +29,7 @@ export default {
     }
   },
   methods: {
-    getTime(){
-      let date = new Date()
-      let year = date.getFullYear();
-      let month = date.getMonth() + 1;
-      let day = date.getDate();
-      this.time = year + '-' + month + '-' + day;
-    }
+
   }
 }
 </script>

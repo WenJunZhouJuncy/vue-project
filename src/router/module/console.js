@@ -4,7 +4,7 @@ const console = {
     name: 'console',
     icon: 'el-icon-s-tools',
     meta:{
-        name:'控制台',
+        name:'首页',
     },
     component: () => import('@/views/console/index.vue'),
 }

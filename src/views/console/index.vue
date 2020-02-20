@@ -45,10 +45,10 @@
 </template>
 
 <script>
-import linecharts from "./components/Linecharts";
-import pie from "./components/Pie";
-import bar from "./components/Bar";
-import ICountUp from "vue-count-to";
+import linecharts from "./components/Linecharts"
+import pie from "./components/Pie"
+import bar from "./components/Bar"
+import ICountUp from "vue-count-to"
 export default {
   name: "console",
   components:{
@@ -68,7 +68,6 @@ export default {
     };
   },
   methods: {
-
   }
 }
 </script>
@@ -86,7 +85,6 @@ export default {
     color: #4d63bc;
     font-weight: 300;
   }
-
   /* element ui */
   .el-row {
     margin-bottom: 20px;
@@ -94,7 +92,6 @@ export default {
   .el-col {
     border-radius: 4px;
   }
-
   /* i 标签 */
   .el-col i {
     font-size: 60px;
@@ -111,7 +108,6 @@ export default {
   .el-icon-wallet {
     color: #34bfa3;
   }
-
   /* 头部信息 */
   .wrap {
     background: #fff;
@@ -154,5 +150,4 @@ export default {
     background: #ffffff;
   }
 }
-
 </style>

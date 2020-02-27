@@ -2,9 +2,6 @@
   <div class="messageTable">
     <el-table
       border
-      v-loading="tableLoading"
-      element-loading-text="拼命加载中"
-      element-loading-spinner="el-icon-loading"
       ref="multipleTable"
       :data="tableData"
       tooltip-effect="dark"
@@ -69,10 +66,6 @@ export default {
       type: Array,
       default: null
     },
-    tableLoading:{
-      type: Boolean,
-      default: false
-    },
     typeOptions:{
       type: Array,
       default: null
@@ -93,14 +86,14 @@ export default {
     },
     //编辑
     handleEdit(index,row){
-      // console.log(index, row);
-      this.$emit('dialogShow',index,row)
+      this.$router.push({path:'/messageManage/messageEdit',query:{type:'edit'}})
+      sessionStorage.setItem('row',JSON.stringify(row))
     },
     // 删除
     confirmDel(index, row){
       this.$emit('deleteListMsg', row)
     },
-    // 表格选中值发生改变时
+    // 表格多选框发生改变时(进行批量删除操作)
     selectionChange (val){
       this.selectionChangeVal = val;
     },

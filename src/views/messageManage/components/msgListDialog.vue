@@ -5,9 +5,7 @@
         <el-form-item
           prop="category"
           label="类别:"
-          :rules="[
-            { required: true, message: '类别不能为空', trigger: 'change' }
-         ]">
+          :rules="[{ required: true, message: '类别不能为空', trigger: 'change' }]">
           <el-select v-model="form.category" placeholder="请选择活动区域" clearable>
             <el-option
               v-for="item in typeOptions"
@@ -20,17 +18,13 @@
         <el-form-item
           prop="title"
           label="标题:"
-          :rules="[
-          { required: true, message: '标题不能为空', trigger: 'blur' }
-        ]">
+          :rules="[{ required: true, message: '标题不能为空', trigger: 'blur' }]">
           <el-input v-model="form.title" clearable placeholder="请输入标题" />
         </el-form-item>
         <el-form-item
           prop="content"
           label="概况:"
-          :rules="[
-          { required: true, message: '概况不能为空', trigger: 'blur' }
-        ]">
+          :rules="[{ required: true, message: '概况不能为空', trigger: 'blur' }]">
           <el-input type="textarea" placeholder="请输入概况" v-model="form.content" :rows="5" />
         </el-form-item>
       </el-form>

@@ -10,7 +10,7 @@
 
       </div>
       <el-tooltip effect="dark" content="退出登录" placement="bottom">
-        <i class="el-icon-switch-button" />
+        <i class="el-icon-switch-button" @click="logout" />
       </el-tooltip>
     </div>
   </div>
@@ -29,7 +29,13 @@ export default {
     }
   },
   methods: {
-
+    logout(){
+      this.confirmMsg('您确定要退出登录吗？').then(() => {
+        this.$store.commit('login/REMOVAL_TOKEN')
+        this.$store.commit('login/REMOVAL_USERNAME')
+        this.$router.push({path: '/login'})
+      })
+    }
   }
 }
 </script>

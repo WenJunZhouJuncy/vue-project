@@ -57,9 +57,6 @@ export default {
     pie,
     bar
   },
-  created(){
-    console.log(this.$store.dispatch('ACTIONS_LOGIN'))
-  },
   data() {
     return {
       users: 56,

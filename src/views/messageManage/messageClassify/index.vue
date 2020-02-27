@@ -8,7 +8,8 @@
       <template  v-for="(item,index) in list">
         <div :key="item.id" class="collapse_box">
           <div class="obtn_box" @mouseenter="idx = index" :class="{btn_show:index === idx}">
-            <el-button type="primary" round @click="dialogShow('编辑分类', item, index)">编辑</el-button>
+            <!--<el-button type="success" round @click="dialogShow('添加子级分类', item)">添加子级分类</el-button>-->
+            <el-button type="primary" round @click="dialogShow('编辑分类', item)">编辑</el-button>
             <el-button type="danger" round @click="DeleteFirstClass(item.id)">删除</el-button>
           </div>
           <el-collapse-item class="card">
@@ -17,16 +18,16 @@
                 {{item.category_name}}
               </div>
             </template>
-            <ul v-if="item.children">
+            <ul v-show="false"><!--item.children-->
               <li class="pdl30" v-for="i in item.children" :key="i.id">
-                {{i.category_name}}
+                <i class="el-icon-paperclip pdr20"/>{{i.category_name}}
                 <div class="tbtn_box">
-                  <el-button type="primary" round>编辑</el-button>
+                  <el-button type="primary" round @click="dialogShow('编辑分类', i)">编辑</el-button>
                   <el-button type="danger" round @click="DeleteFirstClass(i.id)">删除</el-button>
                 </div>
               </li>
             </ul>
-            <p class="pd30" v-else>暂无数据</p>
+            <p class="pd30" v-show="false">暂无数据</p>
           </el-collapse-item>
         </div>
       </template>
@@ -36,8 +37,7 @@
 
 <script>
 import msgDialog from '../components/msgClassifyDialog'
-import {apiAddFirstCategory, apiEditCategory, apiDeleteCategory, apiAddChildrenCategory} from '@/api/messageClassify'
-import {commonGetCategory} from '@/api/common'
+import {apiGetCategoryAll, apiGetCategory, apiAddFirstCategory, apiEditCategory, apiDeleteCategory, apiAddChildrenCategory} from '@/api/messageClassify'
 export default {
   name: "messageClassify",
   components:{
@@ -46,7 +46,6 @@ export default {
   data() {
     return {
       dialogObj: {
-        idx: '', //序号
         id: '',
         dialogType:'',//弹窗类型
         dialogCategoryName:'' //分类名称
@@ -60,7 +59,7 @@ export default {
   },
   methods: {
     //一级分类弹窗
-    dialogShow(dialogType, obj, index) {
+    dialogShow(dialogType, obj) {
       this.dialogObj.dialogType = dialogType;
       if (obj) {
         this.dialogObj.id = obj.id;
@@ -69,7 +68,6 @@ export default {
         this.dialogObj.id = '';
         this.dialogObj.dialogCategoryName = '';
       };
-      index > -1 ? this.dialogObj.idx = index : this.dialogObj.idx = -1;
       this.$refs.dialog.dialogShow();
       //表单自动聚焦
       this.$nextTick(() => {
@@ -78,16 +76,22 @@ export default {
     },
     // 获取分类
     getClassify() {
-      commonGetCategory()
-        .then(res => {
-          this.list = res.data.data
-        })
-        .catch(err => {
-          this.$message({
-            type: 'error',
-            message: err.message
-          })
-        })
+      // 获取分类
+      apiGetCategory()
+      .then(res => {
+        this.list = res.data.data;
+      })
+      //获取所有分类
+      // apiGetCategoryAll()
+      //   .then(res => {
+      //     this.list = res.data
+      //   })
+      //   .catch(err => {
+      //     this.$message({
+      //       type: 'error',
+      //       message: err.message
+      //     })
+      //   })
     },
     //添加一级分类
     addFirstClass(name) {
@@ -119,7 +123,7 @@ export default {
       };
       apiEditCategory(parmas)
         .then(res => {
-          this.list[this.dialogObj.idx].category_name = name;
+          this.getClassify()
           this.$message({
             type: 'success',
             message: res.message
@@ -134,7 +138,6 @@ export default {
     },
     // 删除分类
     DeleteFirstClass(id){
-      console.log(id);
       this.confirmMsg('删除后分类和子级将无法恢复，是否继续？')
         .then(() => {
           apiDeleteCategory({categoryId:id})
@@ -168,11 +171,11 @@ export default {
       console.log(this.dialogObj.id)
       apiAddChildrenCategory(parmas)
         .then(res => {
+          this.getClassify()
           this.$message({
             type: 'success',
             message: res.message
           });
-          this.getClassify()
         })
         .catch(err =>{
           this.$message({

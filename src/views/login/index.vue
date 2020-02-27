@@ -2,7 +2,7 @@
   <div class="login">
     <div class="left_box">
       <img :src="imgUrl" />
-      <p>俊逸星空</p>
+      <p>基于Vue的企业后台管理系统</p>
     </div>
     <div class="right_box">
       <el-tabs v-model="activeName" @tab-click="tabClick">
@@ -195,13 +195,13 @@ export default {
             password: this.loginForm.password,
             code: this.loginForm.code
           };
-          this.$store.dispatch('ACTIONS_LOGIN',params)
+          this.$store.dispatch('login/ACTIONS_LOGIN',params)
             .then(data =>{
               this.$message({
                 message: data.message,
                 type: 'success'
               });
-              this.$router.push({path:'/home/console'})
+              this.$router.push({path:'/console'})
             })
             .catch(error =>{
               this.$message.error(error.message)
@@ -286,11 +286,13 @@ export default {
   justify-content: space-around;
   align-items: center;
   .left_box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     p{
       line-height: 38px;
       font-size: 18px;
       color: #ff733c;
-      text-align: center;
     }
   }
   .right_box{

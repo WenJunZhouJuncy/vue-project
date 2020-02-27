@@ -22,7 +22,7 @@
               <span>{{item.meta.name}}</span>
             </template>
             <template v-for="t in item.children">
-              <el-menu-item :index="t.path" :key="t.id">{{t.meta.name}}</el-menu-item>
+              <el-menu-item :index="t.path" v-if="!t.hidden" :key="t.id">{{t.meta.name}}</el-menu-item>
             </template>
           </el-submenu>
         </template>

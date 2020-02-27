@@ -18,3 +18,11 @@ export function getUsername(){
 export function setUsername(name) {
   Cookies.set(username,name)
 }
+
+export function removeToken(){
+  Cookies.remove(admin)
+}
+
+export function removeUsername() {
+  Cookies.remove(username)
+}

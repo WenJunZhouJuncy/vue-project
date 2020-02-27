@@ -5,11 +5,18 @@
 </template>
 
 <script>
-import { readlink } from "fs";
 export default {
   name: "linecharts",
   mounted() {
     this.mcharts();
+  },
+  data() {
+    return {
+      style: {
+        width: '100%',
+        height: '400px',
+      }
+    }
   },
   methods: {
     mcharts() {

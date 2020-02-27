@@ -1,6 +1,6 @@
 // 控制台路由
 const console = {
-    path: '/home/console',
+    path: '/console',
     name: 'console',
     icon: 'el-icon-s-tools',
     meta:{

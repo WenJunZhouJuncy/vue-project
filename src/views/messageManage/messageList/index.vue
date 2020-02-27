@@ -1,6 +1,5 @@
 <template>
   <div class="messageList">
-    <msgListDialog ref="dialog" :typeOptions="typeOptions" :alterTableRow="alterTableRow" @addListMsg="addListMsg" @alterListMsg="alterListMsg"></msgListDialog>
     <div class="top_box mgb30">
       <div class="type_box mgr30">
         <span class="mgr10">类别:</span>
@@ -41,14 +40,14 @@
           prefix-icon="el-icon-search"
           v-model="searchVal">
         </el-input>
-        <el-button @click="getTableMsg" :disabled="tableLoading">搜索</el-button>
+        <el-button @click="getTableMsg">搜索</el-button>
       </div>
       <div class="append_box">
-        <el-button @click="dialogShow">新增</el-button>
+        <el-button @click="$router.push({path:'/messageManage/messageEdit',query:{type:'add'}})">新增</el-button>
       </div>
     </div>
     <div class="table_box mgb30">
-      <mytable ref="mytable" :tableData="tableData" :tableLoading="tableLoading" :typeOptions="typeOptions" @dialogShow="dialogShow" @deleteListMsg="deleteListMsg"></mytable>
+      <mytable ref="mytable" :tableData="tableData" :typeOptions="typeOptions" @deleteListMsg="deleteListMsg"></mytable>
     </div>
     <div class="foote_box">
       <el-button @click="deleteListMsgAll">批量删除</el-button>
@@ -62,7 +61,7 @@ import mytable from '@/components/messageTable';
 import mypage from '@/components/myPage';
 import msgListDialog from "@/views/messageManage/components/msgListDialog";
 import {apiGetListMsg, apiAddListMsg, apiEditInfo, apiDeleteInfo} from '@/api/messageList'
-import {commonGetCategory} from '@/api/common'
+import {apiGetCategory} from '@/api/messageClassify'
 export default {
   name: "messageList",
   components: {
@@ -72,7 +71,6 @@ export default {
   },
   data() {
     return {
-      tableLoading: false,
       typeVal: '',     //类型绑定值
       timeVal: '',     //时间
       keyVal: '',      //关键字绑定值
@@ -89,8 +87,6 @@ export default {
         }
       ],
       tableData: [],
-      alterTableIndex: '',  //编辑表格当前行的索引
-      alterTableRow: {},  //编辑表格当前行数据
       currentIndex: 1,  //当前页码
       total: 0, //总页码数
       parmasData: {
@@ -108,23 +104,13 @@ export default {
     this.getClassify();
   },
   methods: {
-    // 显示弹窗
-    dialogShow(index, row){
-      if (row) {
-        this.alterTableIndex = index;
-        this.alterTableRow = row;
-      } else {
-        this.alterTableIndex = '';
-        this.alterTableRow = {};
-      }
-      this.$refs.dialog.dialogShow()
-    },
     // 获取分类
     getClassify() {
-      commonGetCategory()
+      apiGetCategory()
       .then(res => {
         this.typeOptions = res.data.data;
-      });
+        sessionStorage.setItem('typeOptions',JSON.stringify(this.typeOptions))
+      })
     },
     //获取表格信息
     getTableMsg(){
@@ -139,7 +125,6 @@ export default {
         this.parmasData.id = '';
         this.parmasData.title = '';
       }
-      this.tableLoading = true;
       let parmas = {
         ...this.parmasData,
         pageNumber: this.currentIndex,
@@ -148,7 +133,6 @@ export default {
       .then(res => {
         this.tableData = res.data.data;
         this.total = res.data.total
-        this.tableLoading = false;
       })
     },
     //添加信息

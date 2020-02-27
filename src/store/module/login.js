@@ -1,20 +1,29 @@
 import {getLogin} from "@/api/login/index";
-import {setToken ,setUsername ,getUsername} from "@/assets/js/token";
+import {setToken ,setUsername ,getUsername, removeToken, removeUsername} from "@/assets/js/token";
 
 const login = {
+  namespaced: true,
   state:{
     token:'',
     username: getUsername() || ''
   },
   getters:{
 
-    },
+  },
   mutations:{
     SET_TOKEN(state,val){
       state.token = val;
     },
     SET_USERNAME(state,val){
       state.username = val;
+    },
+    REMOVAL_TOKEN(state){
+      state.token = '';
+      removeToken()
+    },
+    REMOVAL_USERNAME(state){
+      state.username = '';
+      removeUsername()
     }
   },
   actions:{
@@ -23,7 +32,6 @@ const login = {
         getLogin(data)
           .then(response => {
             let data = response.data;
-            console.log(response);
             content.commit('SET_TOKEN',data.token);
             content.commit('SET_USERNAME',data.username);
             setToken(data.token);

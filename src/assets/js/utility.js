@@ -43,16 +43,13 @@ export default {
 };
 
 // 时间
-export function getTime(data){
-  var date = '';
-  data ? date = new Date(data) : date = new Date();
-  var year = date.getFullYear();
-  var month = date.getMonth() + 1;
-  var day = date.getDate();
-  month < 10 ? month = '0'+ month : month;
-  day < 10? day = '0'+ day : day;
-  let time = year + '-' + month + '-' + day;
-  return time;
+export function getTime(){
+  let year = new Date().toLocaleDateString().substring(0, 4);
+  let month = new Date().toLocaleDateString().substring(5, 6);
+  let day = new Date().toLocaleDateString().substring(7, 9);
+  month = month < 10? '0' + month : month;
+  day = day < 10? '0' + day : day;
+  return year+"-"+month+"-"+day;
 }
 // 时间戳
 export function timestampToTime(timestamp) {

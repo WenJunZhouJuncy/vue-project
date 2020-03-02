@@ -197,11 +197,11 @@ export default {
           };
           this.$store.dispatch('login/ACTIONS_LOGIN',params)
             .then(data =>{
-              this.$message({
-                message: data.message,
-                type: 'success'
-              });
               this.$router.push({path:'/console'})
+                this.$message({
+                    message: data.message,
+                    type: 'success'
+                });
             })
             .catch(error =>{
               this.$message.error(error.message)

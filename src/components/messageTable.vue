@@ -1,4 +1,5 @@
 <template>
+<!--  未封装-->
   <div class="messageTable">
     <el-table
       border
@@ -7,16 +8,10 @@
       tooltip-effect="dark"
       @selection-change="selectionChange"
       style="width: 100%">
-      <el-table-column
-        type="selection"
-        width="55"
-        align="center"></el-table-column>
 
-      <el-table-column
-        prop="title"
-        label="标题"
-        align="center"
-        :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column type="selection" width="55" align="center"></el-table-column>
+
+      <el-table-column prop="title" label="标题" align="center" :show-overflow-tooltip="true"></el-table-column>
 
       <el-table-column
         prop="categoryId"
@@ -38,7 +33,6 @@
         label="管理人"
         min-width="40"
         align="center">
-        juncy
       </el-table-column>
 
       <el-table-column label="操作" width="145">

@@ -131,6 +131,7 @@ export default {
       };
       apiGetListMsg(parmas)
       .then(res => {
+        console.log(res.data)
         this.tableData = res.data.data;
         this.total = res.data.total
       })

@@ -16,14 +16,14 @@ const users = {
       },
       component:() => import('@/views/users/userList/index')
     },
-    {
-      path:'/users/userMessage',
-      name:'userMessage',
-      meta:{
-        name:'用户信息',
-      },
-      component:() => import('@/views/users/userMessage/index')
-    },
+    // {
+    //   path:'/users/userMessage',
+    //   name:'userMessage',
+    //   meta:{
+    //     name:'用户信息',
+    //   },
+    //   component:() => import('@/views/users/userMessage/index')
+    // },
   ]
 }
 

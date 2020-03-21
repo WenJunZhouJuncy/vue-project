@@ -8,3 +8,12 @@ export function apiUploadImgToken(data) {
     data
   })
 }
+
+// 加载表格数据
+export function apiLoadTableData(parmas) {
+  return api.request({
+    method: 'post',
+    url: '/uploadImgToken/',
+    data:'',
+  })
+}

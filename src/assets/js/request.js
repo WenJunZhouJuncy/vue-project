@@ -19,10 +19,9 @@ function load(){
   });
 }
 // 添加请求拦截器
-api.interceptors.request.use(
+api.interceptors.request.use(     // 在发送请求之前做些什么
   function(config) {
     load()
-    // 在发送请求之前做些什么
     // 添加头部信息
     config.headers.Tokey = getToken();
     config.headers.UserName = getUsername();

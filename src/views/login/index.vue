@@ -139,8 +139,8 @@ export default {
       timer:null,                 //计时器
       times:0,                    //倒计时时间
       loginForm:{
-        message:'',
-        password:'',
+        message:'305224350@qq.com',
+        password:'66666666',
         code:''
       },
       registerForm:{
@@ -198,10 +198,10 @@ export default {
           this.$store.dispatch('login/ACTIONS_LOGIN',params)
             .then(data =>{
               this.$router.push({path:'/console'})
-                this.$message({
-                    message: data.message,
-                    type: 'success'
-                });
+              this.$message({
+                message: data.message,
+                type: 'success'
+              });
             })
             .catch(error =>{
               this.$message.error(error.message)

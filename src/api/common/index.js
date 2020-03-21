@@ -13,7 +13,7 @@ export function apiUploadImgToken(data) {
 export function apiLoadTableData(parmas) {
   return api.request({
     method: 'post',
-    url: '/uploadImgToken/',
-    data:'',
+    data: {},
+    ...parmas
   })
 }

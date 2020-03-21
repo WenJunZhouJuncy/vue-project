@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import {requestUrl} from '@/api/commonUrl'
 import myTable from "@/components/myTable";
 export default {
   name: "userList",
@@ -69,7 +70,7 @@ export default {
         theader: [      //表格头部标题
           {
             title: '邮箱',
-            prop: 'mail'
+            prop: 'title'
           },{
             title: '姓名',
             prop: 'name'
@@ -93,9 +94,12 @@ export default {
           }
         ],
         requestParmas:{   //请求参数
-          url:'',
+          url:requestUrl.getList,
           method: 'post',
-          url: '/news/getList/',
+          data:{
+            pageNumber: 1,
+            pageSize: 10
+          }
         }
       }
     }

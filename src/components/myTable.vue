@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import {requestUrl} from '@/api/commonUrl'
+import {apiLoadTableData} from '@/api/common'
 export default {
   name: "myTable",
   props:{
@@ -39,20 +39,29 @@ export default {
   data(){
     return{
       tableData: [
-        {
-          mail: '123',
-          name: '张三',
-          phone: '13132131',
-          region: '广东',
-          role: '管理员'
-        }
+        // {
+        //   mail: '123',
+        //   name: '张三',
+        //   phone: '13132131',
+        //   region: '广东',
+        //   role: '管理员'
+        // }
       ]
     }
   },
   created() {
-    console.log(requestUrl);
+    this.getTableData()
   },
   methods: {
+    getTableData(){
+      let {requestParmas} = this.propsTableData;
+      apiLoadTableData(requestParmas)
+        .then(res => {
+          this.tableData = res.data.data;
+        }).catch(err => {
+
+        })
+    },
     selectionChange() {
 
     }

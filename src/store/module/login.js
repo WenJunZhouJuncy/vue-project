@@ -31,6 +31,7 @@ const login = {
       return new Promise((resolve, reject) =>{
         getLogin(data)
           .then(response => {
+            console.log(response);
             let data = response.data;
             content.commit('SET_TOKEN',data.token);
             content.commit('SET_USERNAME',data.username);

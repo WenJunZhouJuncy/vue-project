@@ -9,11 +9,20 @@ export function apiUploadImgToken(data) {
   })
 }
 
-// 加载表格数据
+// 加载封装的表格数据
 export function apiLoadTableData(parmas) {
   return api.request({
     method: 'post',
     data: {},
     ...parmas
+  })
+}
+
+//获取省、市、区、街道
+export function apiLoadRegion(data) {
+  return api.request({
+    url: '/cityPicker/',
+    method: 'post',
+    data
   })
 }

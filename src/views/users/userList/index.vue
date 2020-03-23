@@ -1,5 +1,6 @@
 <template>
   <div class="userList">
+    <addUserDialog></addUserDialog>
     <div class="header_box mgb30">
       <div class="header_left">
         <span class="mgr10">关键字:</span>
@@ -15,7 +16,7 @@
         <el-button>搜索</el-button>
       </div>
       <div class="header_rigth">
-        <el-button>添加用户</el-button>
+        <el-button @click="addUser">添加用户</el-button>
       </div>
     </div>
     <div class="table_box">
@@ -45,10 +46,12 @@
 <script>
 import {requestUrl} from '@/api/commonUrl'
 import myTable from "@/components/myTable";
+import addUserDialog from "@/views/users/components/addUserDialog";
 export default {
   name: "userList",
   components:{
-    myTable
+    myTable,
+    addUserDialog
   },
   data() {
     return {
@@ -105,6 +108,10 @@ export default {
     }
   },
   methods: {
+    //添加用户
+    addUser(){
+
+    },
     handleEdit(){
 
     },

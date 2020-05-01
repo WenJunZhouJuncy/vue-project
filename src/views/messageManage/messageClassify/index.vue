@@ -138,7 +138,7 @@ export default {
     },
     // 删除分类
     DeleteFirstClass(id){
-      this.confirmMsg('删除后分类和子级将无法恢复，是否继续？')
+      this.confirmMsg('删除后分类将无法恢复，是否继续？')
         .then(() => {
           apiDeleteCategory({categoryId:id})
             .then(res =>{

@@ -8,7 +8,6 @@
       tooltip-effect="dark"
       @selection-change="selectionChange"
       style="width: 100%">
-
 <!--      多选框-->
       <el-table-column type="selection" v-if="propsTableData.selection" width="55" align="center"></el-table-column>
 
@@ -23,29 +22,42 @@
         </el-table-column>
       </template>
     </el-table>
+<!--    分页器-->
+    <div :class="{myPageBoxFlex:userDelete,myPageBoxRigth:!userDelete,mgt30:true,}" >
+      <el-button v-if="userDelete" @click="deleteListMsgAll">批量删除</el-button>
+      <myPage :total="total" @currentChange="currentChange"></myPage>
+    </div>
   </div>
 </template>
 
 <script>
-import {apiLoadTableData} from '@/api/common'
+import {apiLoadTableData, apiDeleteTableData} from '@/api/common'
+import myPage from "@/components/myPage";
 export default {
   name: "myTable",
-  props:{
-    propsTableData:{
+  props: {
+    propsTableData: {
       type: Object,
       default: null
-    }
+    },
+    userList: {
+      type: Object,
+      default: null
+    },
+    userDelete: {
+      type: Object,
+      default: null
+    },
   },
-  data(){
-    return{
+  components: {
+    myPage
+  },
+  data() {
+    return {
+      selectionChangeVal: [],
+      total: 0,
       tableData: [
-        // {
-        //   mail: '123',
-        //   name: '张三',
-        //   phone: '13132131',
-        //   region: '广东',
-        //   role: '管理员'
-        // }
+
       ]
     }
   },
@@ -53,22 +65,83 @@ export default {
     this.getTableData()
   },
   methods: {
+    // 获取表格数据
     getTableData(){
-      let {requestParmas} = this.propsTableData;
-      apiLoadTableData(requestParmas)
+      apiLoadTableData(this.userList)
         .then(res => {
           this.tableData = res.data.data;
+          this.total = res.data.total
         }).catch(err => {
-
+          this.$message({
+            type: 'success',
+            message: err.message
+          })
         })
     },
-    selectionChange() {
-
+    // 多选框改变时
+    selectionChange(val) {
+      this.selectionChangeVal = val
+    },
+    // 提示删除批量信息
+    deleteListMsgAll() {
+      if (this.selectionChangeVal.length > 0) {
+        this.confirmMsg('删除所选数据后将无法恢复，确定要继续吗？')
+          .then(() => {
+            this.deleteAllList()
+          })
+          .catch(() => {
+            this.$message({
+              type:'info',
+              message:'已取消删除'
+            });
+          });
+      } else {
+        this.$message({
+          type: 'error',
+          message: '请选择数据后再操作！'
+        });
+      }
+    },
+    // 批量删除
+    deleteAllList() {
+      let id = this.selectionChangeVal.map(e => e.id)
+      this.userDelete.data.id = id
+      apiDeleteTableData(this.userDelete).
+        then(res => {
+          this.$message({
+            type: 'success',
+            message: res.message
+          })
+          this.getTableData()
+        })
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: err.message
+          })
+        })
+    },
+    // 分页器改变时
+    currentChange(val) {
+      let {data} = this.userList
+      data.pageNumber = val
+      this.$emit("update:userList",{...this.userList,data})
+      // 发送请求
+      this.getTableData()
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+.my_table{
+  .myPageBoxFlex{
+    display: flex;
+    justify-content: space-between;
+  }
+  .myPageBoxRigth{
+    text-align: right;
+  }
+}
 
 </style>

@@ -18,6 +18,16 @@ export function apiLoadTableData(parmas) {
   })
 }
 
+// 删除封装的表格数据
+export function apiDeleteTableData(parmas) {
+  console.log(parmas);
+  return api.request({
+    method: 'post',
+    data: {},
+    ...parmas
+  })
+}
+
 //获取省、市、区、街道
 export function apiLoadRegion(data) {
   return api.request({

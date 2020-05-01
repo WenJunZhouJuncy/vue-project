@@ -1,6 +1,6 @@
 <template>
   <div class="userList">
-    <addUserDialog></addUserDialog>
+    <addUserDialog ref="dialog" @getTableData="$refs.myTable.getTableData()"></addUserDialog>
     <div class="header_box mgb30">
       <div class="header_left">
         <span class="mgr10">关键字:</span>
@@ -16,27 +16,31 @@
         <el-button>搜索</el-button>
       </div>
       <div class="header_rigth">
-        <el-button @click="addUser">添加用户</el-button>
+        <el-button @click="$refs.dialog.dialogShow()">添加用户</el-button>
       </div>
     </div>
     <div class="table_box">
-      <myTable :propsTableData="propsTableData">
+      <myTable ref="myTable" :propsTableData="propsTableData" :userList.sync="userList" :userDelete="userDelete">
         <template v-slot:slotState="slotData">
           <el-switch
-            v-model="switch_val"
+            v-model="slotData.tableSlotData.status"
+            active-value="2"
+            inactive-value="1"
             active-color="#13ce66"
-            inactive-color="#ff4949">
+            inactive-color="#ff4949"
+            :disabled="switchStatus"
+            @change="handleSwitch(slotData.tableSlotData)">
           </el-switch>
         </template>
         <template v-slot:slotOperation="slotData">
-          <el-button
-            size="mini"
-            type="primary"
-            @click="handleEdit(slotData.tableSlotData)">编辑</el-button>
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="primary"-->
+<!--            @click="handleEdit(slotData.tableSlotData)">编 辑</el-button>-->
           <el-button
             size="mini"
             type="danger"
-            @click="confirmDel(slotData.tableSlotData)">删除</el-button>
+            @click="confirmDel(slotData.tableSlotData)">删 除</el-button>
         </template>
       </myTable>
     </div>
@@ -44,9 +48,11 @@
 </template>
 
 <script>
-import {requestUrl} from '@/api/commonUrl'
-import myTable from "@/components/myTable";
-import addUserDialog from "@/views/users/components/addUserDialog";
+import { requestUrl } from '@/api/commonUrl'
+import { apiDeleteTableData } from '@/api/common'
+import { apiUserActives } from '@/api/userList'
+import myTable from "@/components/myTable"
+import addUserDialog from "@/views/users/components/addUserDialog"
 export default {
   name: "userList",
   components:{
@@ -58,6 +64,7 @@ export default {
       options_val: '',
       search_val: '',
       switch_val: false,
+      switchStatus: false,
       options: [
         {
           value: 'phone',
@@ -68,15 +75,16 @@ export default {
           label: '姓名'
         }
       ],
+      // 表格封装组件
       propsTableData: {
         selection: true,  //多选框
         theader: [      //表格头部标题
           {
             title: '邮箱',
-            prop: 'title'
+            prop: 'username'
           },{
             title: '姓名',
-            prop: 'name'
+            prop: 'truename'
           },{
             title: '手机号',
             prop: 'phone'
@@ -96,27 +104,96 @@ export default {
             slot: 'slotOperation'
           }
         ],
-        requestParmas:{   //请求参数
-          url:requestUrl.getList,
-          method: 'post',
-          data:{
-            pageNumber: 1,
-            pageSize: 10
-          }
+      },
+      //请求获取用户
+      userList: {
+        url: requestUrl.getUserList,
+        method: 'post',
+        data: {
+          username: "",
+          truename: "",
+          phone: "",
+          pageNumber: 1,
+          pageSize: 10
+        }
+      },
+      //请求删除用户
+      userDelete: {
+        url: requestUrl.userDelete,
+        method: 'post',
+        data: {
+          id: []
         }
       }
     }
   },
   methods: {
-    //添加用户
-    addUser(){
-
+    // 编辑用户
+    handleEdit(val) {
+      this.$refs.dialog.dialogShow()
+      console.log(val);
     },
-    handleEdit(){
-
+    // 提示删除用户
+    confirmDel(val) {
+      this.confirmMsg('删除该用户后将无法恢复，确定要继续吗？')
+        .then(() => {
+          let parmas = {
+            url: requestUrl.userDelete,
+            data: {
+              id: [val.id]
+            }
+          }
+          this.deleteUser(parmas)
+        })
+        .catch(() => {
+          this.$message({
+            type:'info',
+            message:'已取消删除'
+          });
+        });
     },
-    confirmDel(){
-
+    // 删除用户
+    deleteUser(parmas){
+      apiDeleteTableData(parmas)
+        .then(res => {
+          this.$message({
+            type: 'success',
+            message: res.message
+          })
+          this.$refs.myTable.getTableData()
+        })
+        .catch(err => {
+          this.$message({
+            type: 'error',
+            message: err.message
+          })
+        })
+    },
+    // 用户禁启用
+    handleSwitch(val) {
+      // 禁用switch
+      this.switchStatus = true
+      let parmas = {
+        id: val.id,
+        status: val.status
+      }
+      apiUserActives(parmas)
+        .then(res => {
+          this.$message({
+            type: "success",
+            message: res.message
+          })
+          // 启用switch
+          this.switchStatus = false
+        })
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: err.message
+          })
+          // 启用switch
+          this.switchStatus = false
+        })
     }
   }
 }
@@ -130,7 +207,6 @@ export default {
     .header_left{
       font-size: 16px;
       color: #333;
-      /*display: flex;*/
       button{
         color: #fff;
         background: #409eff;

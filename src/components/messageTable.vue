@@ -29,10 +29,10 @@
         align="center"></el-table-column>
 
       <el-table-column
-
         label="管理人"
         min-width="40"
         align="center">
+        juncy
       </el-table-column>
 
       <el-table-column label="操作" width="145">
@@ -85,6 +85,7 @@ export default {
     },
     // 删除
     confirmDel(index, row){
+      console.log(row);
       this.$emit('deleteListMsg', row)
     },
     // 表格多选框发生改变时(进行批量删除操作)

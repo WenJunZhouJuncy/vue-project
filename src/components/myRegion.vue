@@ -32,7 +32,7 @@
         </el-select>
       </el-col>
       <el-col :span="6">
-        <el-select v-model="region.street" placeholder="街道" clearable>
+        <el-select v-model="region.street" placeholder="街道" clearable @change="handlChange()">
           <el-option
             v-for="item in option.street"
             :key="item.STREET_CODE"
@@ -63,7 +63,6 @@ export default {
         area: '',
         street: ''
       }
-
     }
   },
   created() {
@@ -78,12 +77,15 @@ export default {
     },
     // 下拉菜单修改时
     handlChange(type,codeKey,code){
-      let parmas = {type}
-      parmas[codeKey] = code
-      //重置区域
-      this.resetRegion(type)
-      // 发送请求
-      this.getprovince(parmas)
+      if (type) {
+        let parmas = {type}
+        parmas[codeKey] = code
+        //重置区域
+        this.resetRegion(type)
+        // 发送请求
+        this.getprovince(parmas)
+      }
+      this.$emit('EmitRegion',this.region)
     },
     //重置区域
     resetRegion(type){
@@ -93,6 +95,17 @@ export default {
       n_arr.forEach(e => {
         this.region[e] = ''
         this.option[e] = ''
+      })
+    },
+    // 地区全部重置
+    resetAllRegion(){
+      console.log(1);
+      let arr = ['province','city','area','street']
+      arr.forEach(e => {
+        this.region[e] = ''
+        if (e !== 'province'){
+          this.option[e] = ''
+        }
       })
     }
   }
